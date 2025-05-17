@@ -1,0 +1,38 @@
+body {
+    display: flex;
+    margin: 0;
+    font-family: sans-serif;
+  }
+  
+  #sidebar {
+    width: 250px;
+    background: #f8f8f8;
+    padding: 1rem;
+    border-right: 1px solid #ccc;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  #main-content {
+    padding: 1rem;
+    flex-grow: 1;
+  }
+  
+  .specimen {
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-bottom: 0.25rem;
+    border-radius: 4px;
+  }
+  
+  .specimen:hover {
+    background: #ddd;
+  }
+  
+  img {
+    max-width: 300px;
+    margin-top: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
