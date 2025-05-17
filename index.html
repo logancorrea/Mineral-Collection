@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mineral Collection Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([39.5, -111.5], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    fetch('https://raw.githubusercontent.com/logancorrea/Mineral-Collection/main/mineral_collection.geojson')
+      .then(response => response.json())
+      .then(data => {
+        L.geoJSON(data, {
+          onEachFeature: function (feature, layer) {
+            let props = feature.properties;
+            let popup = Object.entries(props)
+              .map(([key, val]) => `<strong>${key}:</strong> ${val}`)
+              .join('<br>');
+            layer.bindPopup(popup);
+          }
+        }).addTo(map);
+      })
+      .catch(err => console.error("Failed to load GeoJSON:", err));
+  </script>
+</body>
+</html>
