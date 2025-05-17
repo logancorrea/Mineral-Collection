@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mineral Collection Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  
+  <style>
+    html, body, #map { height: 100%; margin: 0; }
+  </style>
+</head>
+<body>
+    <nav style="background: #333; color: white; padding: 1rem; display: flex; gap: 1.5rem; font-family: sans-serif;">
+        <a href="index.html" style="color: white; text-decoration: none;">🧾 Database</a>
+        <a href="map.html" style="color: white; text-decoration: none;">🗺️ Map</a>
+      </nav>
+  <div id="map"></div>
+
+  <!-- Leaflet + Clustering -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+  <script>
+    const SHEET_ID = "1KWMTZaLluEq3l0XPYcfM1gixYcynKklUfWFdDePV05g";
+    const SHEET_NAME = "Sheet1";
+    const gvizUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=${SHEET_NAME}&tqx=out:json`;
+
+    const map = L.map('map').setView([39.5, -111.5], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 18
+    }).addTo(map);
+
+    const clusterGroup = L.markerClusterGroup();
+
+    fetch(gvizUrl)
+      .then(res => res.text())
+      .then(text => {
+        const json = JSON.parse(text.substr(47).slice(0, -2));
+        const cols = json.table.cols.map(col => col.label);
+        const rows = json.table.rows.map(row => {
+          const obj = {};
+          row.c.forEach((cell, i) => {
+            obj[cols[i]] = cell ? cell.v : "";
+          });
+          return obj;
+        });
+
+        rows.forEach(entry => {
+          const lat = parseFloat(entry["Latitude"]);
+          const lng = parseFloat(entry["Longitude"]);
+          if (!isNaN(lat) && !isNaN(lng)) {
+            const popupContent = `
+              <strong>Species:</strong> ${entry["Species"] || "N/A"}<br>
+              <strong>Locality:</strong> ${entry["Locality"] || "N/A"}<br>
+              <strong>Collection #:</strong> ${entry["Collection #"] || ""}<br>
+              <strong>Notes:</strong> ${entry["Notes"] || ""}
+            `;
+
+            const marker = L.circleMarker([lat, lng], {
+              radius: 6,
+              color: '#3388ff',
+              fillOpacity: 0.8
+            }).bindPopup(popupContent).bindTooltip(entry["Species"] || "Mineral");
+
+            clusterGroup.addLayer(marker);
+          }
+        });
+
+        map.addLayer(clusterGroup);
+        map.fitBounds(clusterGroup.getBounds());
+      })
+      .catch(err => {
+        console.error("Failed to load Google Sheet:", err);
+        alert("Unable to load map data.");
+      });
+  </script>
+</body>
+</html>
