@@ -1,21 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Mineral Collection Map</title>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
+  <title>Mineral Map with Hover Info</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  
+  <!-- Leaflet + Cluster CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  
   <style>
-    html, body, #map {
-      height: 100%;
-      margin: 0;
-    }
+    html, body, #map { height: 100%; margin: 0; padding: 0; }
   </style>
 </head>
 <body>
   <div id="map"></div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Leaflet + Cluster JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
   <script>
     const map = L.map('map').setView([39.5, -111.5], 6);
 
@@ -24,20 +29,41 @@
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    fetch('https://raw.githubusercontent.com/logancorrea/Mineral-Collection/main/mineral_collection.geojson')
-      .then(response => response.json())
+    const clusterGroup = L.markerClusterGroup();
+
+    fetch('mineral_collection.geojson')
+      .then(res => res.json())
       .then(data => {
-        L.geoJSON(data, {
-          onEachFeature: function (feature, layer) {
-            let props = feature.properties;
-            let popup = Object.entries(props)
-              .map(([key, val]) => `<strong>${key}:</strong> ${val}`)
-              .join('<br>');
-            layer.bindPopup(popup);
-          }
-        }).addTo(map);
+        data.features.forEach(feature => {
+          const [lng, lat] = feature.geometry.coordinates;
+          const props = feature.properties;
+
+          const popupHtml = Object.entries(props)
+            .map(([k, v]) => `<strong>${k}:</strong> ${v}`)
+            .join('<br>');
+
+          const tooltipText = props["Species"] || "Mineral specimen";
+
+          const marker = L.circleMarker([lat, lng], {
+            radius: 6,
+            color: '#3388ff',
+            weight: 1,
+            fillOpacity: 0.8
+          })
+          .bindPopup(popupHtml)
+          .bindTooltip(tooltipText, {
+            sticky: true,
+            direction: 'top',
+            offset: [0, -5]
+          });
+
+          clusterGroup.addLayer(marker);
+        });
+
+        map.addLayer(clusterGroup);
+        map.fitBounds(clusterGroup.getBounds());
       })
-      .catch(err => console.error("Failed to load GeoJSON:", err));
+      .catch(err => console.error('Failed to load GeoJSON:', err));
   </script>
 </body>
 </html>
