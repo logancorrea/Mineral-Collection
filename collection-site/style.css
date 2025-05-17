@@ -36,3 +36,20 @@ body {
     border-radius: 4px;
   }
   
+  #sidebar h2 {
+    margin: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+  }
+  
+  .section p {
+    margin: 4px 0;
+  }
+  
+  .section ul {
+    padding-left: 20px;
+    margin: 4px 0;
+  }
+  
