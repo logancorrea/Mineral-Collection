@@ -23,7 +23,7 @@ Papa.parse(photoCsvUrl, {
   header: true,
   complete: (results) => {
     results.data.forEach(row => {
-      const id = parseInt(row["Catalog Number"]);
+      const id = parseInt(row["Catalog ID"]);
       if (!isNaN(id) && row["File Names"]) {
         photoMap[id] = row["File Names"].split(",").map(s => s.trim());
       }
@@ -37,7 +37,7 @@ Papa.parse(metaCsvUrl, {
   header: false,
   complete: async (results) => {
     const rows = results.data;
-    const headerRowIndex = rows.findIndex(row => row.includes("Catalog Number"));
+    const headerRowIndex = rows.findIndex(row => row.includes("Catalog ID"));
     if (headerRowIndex === -1) return console.error("❌ Could not find header row.");
 
     const headerRow = rows[headerRowIndex].map(col => col?.trim().replace(/\s+/g, " "));
@@ -48,7 +48,7 @@ Papa.parse(metaCsvUrl, {
       headerRow.forEach((col, i) => {
         rowObj[col] = row[i];
       });
-      const rawId = rowObj["Catalog Number"];
+      const rawId = rowObj["Catalog ID"];
       if (rawId && !isNaN(rawId)) {
         const id = parseInt(rawId);
         specimenMap[id] = rowObj;
@@ -72,7 +72,7 @@ function renderSidebar() {
     const link = document.createElement("a");
     link.href = `#${id}`;
     link.className = "specimen";
-    link.textContent = `Catalog ${id} - ${species || "Unknown"}`;
+    link.textContent = `Cat ID: ${id} | ${species || "Unknown"}`;
     sidebar.appendChild(link);
   });
 }
@@ -109,7 +109,7 @@ async function showSpecimen(id) {
   content.innerHTML = `
     <h2>${spec["Specimen Title"] || species || `Catalog ${id}`}</h2>
     <div class="section">
-      <p><strong>Catalog Number:</strong> ${id}</p>
+      <p><strong>Catalog ID:</strong> ${id}</p>
       <p><strong>Species:</strong> ${species || "—"}</p>
       ${mindatLinks ? `<p><strong>Mindat Links:</strong><ul>${mindatLinks}</ul></p>` : ""}
       <p><strong>Locality:</strong> ${spec["Locality"] || "—"}</p>
