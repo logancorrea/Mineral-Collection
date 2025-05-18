@@ -40,29 +40,32 @@ Papa.parse(metaCsvUrl, {
     });
 
     renderSidebar();
+    loadFromHash();
   }
 });
 
-// === Sidebar ===
+// === Render Sidebar ===
 function renderSidebar() {
   sidebar.innerHTML = "<h2>Specimens</h2>";
-  Object.values(specimenMap).forEach(spec => {
+  Object.entries(specimenMap).forEach(([id, spec]) => {
     const species = [
       spec["Species 1"], spec["Species 2"], spec["Species 3"],
       spec["Species 4"], spec["Species 5"]
     ].filter(Boolean).join(", ");
 
-    const div = document.createElement("div");
-    div.className = "specimen";
-    div.textContent = `${spec["Catalog Number"]} - ${species || "Unknown"}`;
-    div.onclick = () => showSpecimen(parseInt(spec["Catalog Number"]));
-    sidebar.appendChild(div);
+    const link = document.createElement("a");
+    link.href = `#${id}`;
+    link.className = "specimen";
+    link.textContent = `Catalog ${id} - ${species || "Unknown"}`;
+    sidebar.appendChild(link);
   });
 }
 
 // === Main Viewer ===
 async function showSpecimen(id) {
   const spec = specimenMap[id];
+  if (!spec) return;
+
   const species = [
     spec["Species 1"], spec["Species 2"], spec["Species 3"],
     spec["Species 4"], spec["Species 5"]
@@ -96,7 +99,6 @@ async function showSpecimen(id) {
     <img src="${url}" alt="Specimen image" class="specimen-img ${i >= 4 ? 'hidden' : ''}" />
   `).join("");
 
-  // Mindat Locality link
   const mindatLocUrl = spec["Mindat Locality"];
   const mindatLocHtml = mindatLocUrl
     ? `<a href="${mindatLocUrl}" target="_blank">${mindatLocUrl}</a>` : "—";
@@ -121,37 +123,10 @@ async function showSpecimen(id) {
       ${toggleButton}
       <div class="image-grid">${imagesHtml}</div>
     </div>
+    <div id="map"></div>
   `;
 
-// === Add map container if coordinates exist ===
-const mapContainer = document.createElement("div");
-mapContainer.id = "map";
-content.appendChild(mapContainer);
-
-// Parse and add marker
-const coordString = spec["Coordinates"];
-if (coordString && coordString.includes(",")) {
-  const [latStr, lngStr] = coordString.split(",").map(s => s.trim());
-  const lat = parseFloat(latStr);
-  const lng = parseFloat(lngStr);
-
-  if (!isNaN(lat) && !isNaN(lng)) {
-    const map = L.map("map").setView([lat, lng], 10);
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    L.marker([lat, lng]).addTo(map).bindPopup(spec["Locality"] || `Catalog ${id}`);
-  } else {
-    mapContainer.innerHTML = "<p>Invalid coordinates.</p>";
-  }
-} else {
-  mapContainer.innerHTML = "<p>No coordinates available.</p>";
-}
-
-
-  // Expand Gallery
+  // Toggle Gallery
   const btn = document.getElementById("toggleGallery");
   if (btn) {
     btn.onclick = () => {
@@ -159,4 +134,37 @@ if (coordString && coordString.includes(",")) {
       btn.remove();
     };
   }
+
+  // Render Map
+  const coordString = spec["Coordinates"];
+  if (coordString && coordString.includes(",")) {
+    const [latStr, lngStr] = coordString.split(",").map(s => s.trim());
+    const lat = parseFloat(latStr);
+    const lng = parseFloat(lngStr);
+
+    if (!isNaN(lat) && !isNaN(lng)) {
+      const map = L.map("map").setView([lat, lng], 10);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      L.marker([lat, lng]).addTo(map).bindPopup(spec["Locality"] || `Catalog ${id}`);
+    } else {
+      document.getElementById("map").innerHTML = "<p>Invalid coordinates.</p>";
+    }
+  } else {
+    document.getElementById("map").innerHTML = "<p>No coordinates available.</p>";
+  }
 }
+
+// === Handle hash navigation on page load or hash change ===
+function loadFromHash() {
+  const hash = window.location.hash;
+  if (hash && hash.startsWith("#")) {
+    const id = parseInt(hash.substring(1));
+    if (!isNaN(id)) showSpecimen(id);
+  }
+}
+
+window.addEventListener("hashchange", loadFromHash);

@@ -49,7 +49,7 @@ Papa.parse(metaCsvUrl, {
       card.innerHTML = `
         <a href="index.html#${id}">
           <img src="${imageUrl}" alt="Specimen ${id}" />
-          <div class="caption">Catalog ${id}<br>${species || "—"}</div>
+          <div class="caption">Catalog Number: ${id}<br>${species || "—"}</div>
         </a>
       `;
       galleryGrid.appendChild(card);
