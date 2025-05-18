@@ -165,6 +165,7 @@ content.innerHTML = `
 
   <div class="section">
     <p><strong>Catalog ID:</strong> ${id}</p>
+    <p><strong>Mindat ID:</strong> ${spec["MinID"] || "—"}</p>
     <p><strong>Species:</strong> ${species || "—"}</p>
     ${mindatLinks ? `<p><strong>Mindat Links:</strong><ul>${mindatLinks}</ul></p>` : ""}
     <p><strong>Locality:</strong> ${spec["Locality"] || "—"}</p>

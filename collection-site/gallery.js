@@ -24,7 +24,7 @@ Papa.parse(metaCsvUrl, {
   header: false,
   complete: async (results) => {
     const rows = results.data;
-    const headerIndex = rows.findIndex(row => row.includes("Catalog Number"));
+    const headerIndex = rows.findIndex(row => row.includes("Catalog ID"));
     if (headerIndex === -1) return;
 
     const headers = rows[headerIndex].map(col => col?.trim());
@@ -34,7 +34,7 @@ Papa.parse(metaCsvUrl, {
       const spec = {};
       headers.forEach((col, i) => spec[col] = row[i]);
 
-      const id = parseInt(spec["Catalog Number"]);
+      const id = parseInt(spec["Catalog ID"]);
       if (!id) continue;
 
       const species = [
@@ -49,7 +49,7 @@ Papa.parse(metaCsvUrl, {
       card.innerHTML = `
         <a href="index.html#${id}">
           <img src="${imageUrl}" alt="Specimen ${id}" />
-          <div class="caption">Catalog Number: ${id}<br>${species || "—"}</div>
+          <div class="caption">Catalog ID: ${id}<br>${species || "—"}</div>
         </a>
       `;
       galleryGrid.appendChild(card);
