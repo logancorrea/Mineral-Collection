@@ -27,19 +27,34 @@ Papa.parse(metaCsvUrl, {
   }
 });
 
-function makeMap(){
-  if(!specimens.length){ alert("No coords found"); return;}
+function makeMap() {
+  if (!specimens.length) { alert("No coords"); return; }
+
   const avgLat = specimens.reduce((s,p)=>s+p.lat,0)/specimens.length;
   const avgLng = specimens.reduce((s,p)=>s+p.lng,0)/specimens.length;
 
-  const map = L.map("map").setView([avgLat,avgLng], 2);
+  const map = L.map("map").setView([avgLat, avgLng], 2);
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    { attribution:'&copy; OpenStreetMap contributors' }).addTo(map);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors"
+  }).addTo(map);
 
-  specimens.forEach(sp=>{
-    L.marker([sp.lat, sp.lng])
-      .addTo(map)
-      .bindPopup(`<a href="index.html#${sp.id}">${sp.title} (ID ${sp.id})</a>`);
+  /* ▶︎ create one cluster group ◀︎ */
+  const cluster = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: false,
+    maxClusterRadius: 40          // tweak if you like
   });
+
+  /* add every marker to the group */
+  specimens.forEach(sp => {
+    const m = L.marker([sp.lat, sp.lng])
+              .bindPopup(`<a href="index.html#${sp.id}">
+                            ${sp.title} (ID ${sp.id})
+                          </a>`);
+    cluster.addLayer(m);
+  });
+
+  cluster.addTo(map);
 }
+
