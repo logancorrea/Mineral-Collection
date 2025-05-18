@@ -1,9 +1,11 @@
 const metaCsvUrl = "https://docs.google.com/spreadsheets/d/1KWMTZaLluEq3l0XPYcfM1gixYcynKklUfWFdDePV05g/gviz/tq?tqx=out:csv&sheet=Database";
+const photoCsvUrl = "https://docs.google.com/spreadsheets/d/1KWMTZaLluEq3l0XPYcfM1gixYcynKklUfWFdDePV05g/gviz/tq?tqx=out:csv&sheet=photo_ids";
 
 const sidebar = document.getElementById("sidebar");
 const content = document.getElementById("main-content");
 
 const specimenMap = {};
+const photoMap = {};
 
 // === Utility: Check if image exists ===
 async function imageExists(url) {
@@ -14,6 +16,20 @@ async function imageExists(url) {
     return false;
   }
 }
+
+// === Load photo_ids CSV ===
+Papa.parse(photoCsvUrl, {
+  download: true,
+  header: true,
+  complete: (results) => {
+    results.data.forEach(row => {
+      const id = parseInt(row["Catalog Number"]);
+      if (!isNaN(id) && row["File Names"]) {
+        photoMap[id] = row["File Names"].split(",").map(s => s.trim());
+      }
+    });
+  }
+});
 
 // === Load Database CSV ===
 Papa.parse(metaCsvUrl, {
@@ -77,28 +93,14 @@ async function showSpecimen(id) {
     .map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`)
     .join("");
 
-  // Images
-  console.log(`Checking images for specimen ${id}`);
-  const extensions = ["jpg", "jpeg", "png", "webp"];
-  const maxImages = 20;
-  const validImages = [];
-  for (let i = 0; i < maxImages; i++) {
-    const base = i === 0 ? `${id}` : `${id}-${i}`;
-    for (const ext of extensions) {
-      const url = `images/${base}.${ext}`;
-      if (await imageExists(url)) {
-        validImages.push(url);
-        break;
-      }
-    }
-  }
-
-  const toggleButton = validImages.length > 4
+  // ✅ Use preloaded photoMap
+  const fileNames = photoMap[id] || [];
+  const toggleButton = fileNames.length > 4
     ? `<button id="toggleGallery">Show all photos</button>` : "";
 
-  const imagesHtml = validImages.map((url, i) => `
-    <img src="${url}" alt="Specimen image" class="specimen-img ${i >= 4 ? 'hidden' : ''}" />
-  `).join("");
+  const imagesHtml = fileNames.map((name, i) => `
+    <img src="images/${name}" alt="Specimen image" class="specimen-img ${i >= 4 ? 'hidden' : ''}" loading="lazy" />
+  `).join("") || "<p>No images found.</p>";
 
   const mindatLocUrl = spec["Mindat Locality"];
   const mindatLocHtml = mindatLocUrl
@@ -127,16 +129,14 @@ async function showSpecimen(id) {
     <div id="map"></div>
   `;
 
-  // Toggle Gallery
-  const btn = document.getElementById("toggleGallery");
-  if (btn) {
-    btn.onclick = () => {
+  if (toggleButton) {
+    document.getElementById("toggleGallery").onclick = () => {
       document.querySelectorAll(".specimen-img").forEach(img => img.classList.remove("hidden"));
-      btn.remove();
+      document.getElementById("toggleGallery").remove();
     };
   }
 
-  // Render Map
+  // === Map ===
   const coordString = spec["Coordinates"];
   if (coordString && coordString.includes(",")) {
     const [latStr, lngStr] = coordString.split(",").map(s => s.trim());
@@ -145,11 +145,9 @@ async function showSpecimen(id) {
 
     if (!isNaN(lat) && !isNaN(lng)) {
       const map = L.map("map").setView([lat, lng], 10);
-
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
-
       L.marker([lat, lng]).addTo(map).bindPopup(spec["Locality"] || `Catalog ${id}`);
     } else {
       document.getElementById("map").innerHTML = "<p>Invalid coordinates.</p>";
