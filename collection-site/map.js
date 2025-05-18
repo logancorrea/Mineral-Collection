@@ -50,7 +50,7 @@ function makeMap() {
   specimens.forEach(sp => {
     const m = L.marker([sp.lat, sp.lng])
               .bindPopup(`<a href="index.html#${sp.id}">
-                            ${sp.title} (ID ${sp.id})
+                            ${sp.title} (Cat ID: ${sp.id})
                           </a>`);
     cluster.addLayer(m);
   });

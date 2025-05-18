@@ -5,25 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Collection Map</title>
 
-  <!-- Leaflet styles -->
+  <!-- Leaflet & cluster CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-  <!-- Marker-cluster styles -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 
   <style>
-    body,html{margin:0;height:100%;font-family:sans-serif;}
-    #map{height:100%;width:100%;}
+    body,html { margin:0; height:100%; font-family:sans-serif; }
+
+    /* --- header (same as index) --- */
+    #main-header{
+      display:flex;align-items:center;background:#444;color:#fff;
+      padding:10px 20px;position:sticky;top:0;z-index:1000;
+    }
+    .header-left{display:flex;align-items:center;gap:20px}
+    .header-title{font-size:1.5em;font-weight:bold}
+    .header-nav a{color:#fff;margin-left:10px;text-decoration:none}
+    .header-nav a:hover{text-decoration:underline}
+
+    /* --- map area --- */
+    #map{height:calc(100% - 56px); /* header ≈ 56 px */ width:100%;}
   </style>
 </head>
 <body>
 
-  <a href="index.html"
-     style="position:absolute;z-index:1000;background:#fff;padding:6px 10px;
-            border:1px solid #ccc;margin:8px;text-decoration:none;
-            border-radius:4px;font-size:.9rem;">← Home</a>
+  <!-- same header used on your main page -->
+  <header id="main-header">
+    <div class="header-left">
+      <div class="header-title">Correa Collection</div>
+      <nav class="header-nav">
+        <a href="index.html">Home</a>
+        <a href="map.html">Map</a>
+        <a href="gallery.html">Gallery</a>
+      </nav>
+    </div>
+  </header>
 
+  <!-- map fills the remaining space -->
   <div id="map"></div>
 
   <!-- libs -->
@@ -31,7 +49,7 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
-  <!-- your logic -->
+  <!-- your marker-building logic -->
   <script src="map.js"></script>
 </body>
 </html>
