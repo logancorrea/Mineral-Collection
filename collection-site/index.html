@@ -10,10 +10,23 @@
 
 </head>
 <body>
-  <div id="sidebar"></div>
-  <div id="main-content">
-    <p>Select a specimen</p>
+  <!-- Add this inside your <body> tag, at the top -->
+<header id="main-header">
+  <div class="header-left">
+    <div class="header-title">Correa Collection</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="map.html">Map</a>
+      <a href="gallery.html">Gallery</a>
+    </nav>
   </div>
+
+</header>
+  <div id="layout">
+  <div id="sidebar"></div>
+    <div id="main-content"><p>Select a specimen</p></div>
+  </div>
+
   <script src="script.js"></script>
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
