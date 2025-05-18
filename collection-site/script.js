@@ -95,12 +95,45 @@ async function showSpecimen(id) {
 
   // ✅ Use preloaded photoMap
   const fileNames = photoMap[id] || [];
-  const toggleButton = fileNames.length > 4
-    ? `<button id="toggleGallery">Show all photos</button>` : "";
+  let currentSlide = 0;
+const visibleCount = 3;
 
-  const imagesHtml = fileNames.map((name, i) => `
-    <img src="images/${name}" alt="Specimen image" class="specimen-img ${i >= 4 ? 'hidden' : ''}" loading="lazy" />
-  `).join("") || "<p>No images found.</p>";
+function renderCarousel(images) {
+  const end = Math.min(currentSlide + visibleCount, images.length);
+  const shown = images.slice(currentSlide, end).map(name =>
+    `<img src="images/${name}" alt="Specimen image" class="specimen-img" loading="lazy" />`
+  ).join("");
+
+  const hasPrev = currentSlide > 0;
+  const hasNext = end < images.length;
+
+  return `
+    <div class="carousel-controls">
+      <button id="prevBtn" ${hasPrev ? "" : "disabled"}>◀</button>
+      <button id="nextBtn" ${hasNext ? "" : "disabled"}>▶</button>
+    </div>
+    <div class="image-grid">${shown}</div>
+  `;
+}
+
+const renderImages = () => {
+  const galleryDiv = document.getElementById("gallery-content");
+  if (galleryDiv) {
+    galleryDiv.innerHTML = renderCarousel(fileNames);
+    const next = document.getElementById("nextBtn");
+    const prev = document.getElementById("prevBtn");
+
+    if (next) next.onclick = () => {
+      currentSlide += visibleCount;
+      renderImages();
+    };
+    if (prev) prev.onclick = () => {
+      currentSlide = Math.max(0, currentSlide - visibleCount);
+      renderImages();
+    };
+  }
+};
+
 
   const mindatLocUrl = spec["Mindat Locality"];
   const mindatLocHtml = mindatLocUrl
@@ -123,11 +156,13 @@ async function showSpecimen(id) {
     </div>
 
     <div class="gallery">
-      ${toggleButton}
-      <div class="image-grid">${imagesHtml}</div>
+      <div id="gallery-content"></div>
     </div>
     <div id="map"></div>
   `;
+
+  renderImages(); // initialize carousel
+
 
   if (toggleButton) {
     document.getElementById("toggleGallery").onclick = () => {

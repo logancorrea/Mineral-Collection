@@ -78,9 +78,10 @@ body {
 /* === Gallery Grid === */
 .image-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .specimen-img {
@@ -151,4 +152,16 @@ button#toggleGallery {
 
 #sidebar a.specimen:hover {
   background-color: #eee;
+}
+
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.carousel-controls button {
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
 }
