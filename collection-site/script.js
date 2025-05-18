@@ -140,27 +140,30 @@ const renderImages = () => {
   const mindatLocHtml = mindatLocUrl
     ? `<a href="${mindatLocUrl}" target="_blank">${mindatLocUrl}</a>` : "—";
 
-  content.innerHTML = `
-    <h2>${spec["Specimen Title"] || species || `Catalog ${id}`}</h2>
-    <div class="section">
-      <p><strong>Catalog ID:</strong> ${id}</p>
-      <p><strong>Species:</strong> ${species || "—"}</p>
-      ${mindatLinks ? `<p><strong>Mindat Links:</strong><ul>${mindatLinks}</ul></p>` : ""}
-      <p><strong>Locality:</strong> ${spec["Locality"] || "—"}</p>
-      <p><strong>Mindat Locality:</strong> ${mindatLocHtml}</p>
-      <p><strong>Date Acquired:</strong> ${spec["Date of Acquisition"] || "—"}</p>
-      <p><strong>Dimensions:</strong> ${spec["Dimensions"] || "—"}</p>
-      <p><strong>Max Crystal Size:</strong> ${spec["Max Crystal Size"] || "—"}</p>
-      <p><strong>Source:</strong> ${spec["Specimen Source"] || "—"}</p>
-      <p><strong>Notes:</strong> ${spec["Notes"] || "—"}</p>
-      <p><strong>Coordinates:</strong> ${spec["Coordinates"] || "—"}</p>
-    </div>
+content.innerHTML = `
+  <h2>${spec["Specimen Title"] || species || `Catalog ${id}`}</h2>
 
-    <div class="gallery">
-      <div id="gallery-content"></div>
-    </div>
-    <div id="map"></div>
-  `;
+  <!-- ⬇️  GALLERY NOW COMES RIGHT AFTER THE TITLE -->
+  <div class="gallery">
+    <div id="gallery-content"></div>
+  </div>
+
+  <div class="section">
+    <p><strong>Catalog ID:</strong> ${id}</p>
+    <p><strong>Species:</strong> ${species || "—"}</p>
+    ${mindatLinks ? `<p><strong>Mindat Links:</strong><ul>${mindatLinks}</ul></p>` : ""}
+    <p><strong>Locality:</strong> ${spec["Locality"] || "—"}</p>
+    <p><strong>Mindat Locality:</strong> ${mindatLocHtml}</p>
+    <p><strong>Date Acquired:</strong> ${spec["Date of Acquisition"] || "—"}</p>
+    <p><strong>Dimensions:</strong> ${spec["Dimensions"] || "—"}</p>
+    <p><strong>Max Crystal Size:</strong> ${spec["Max Crystal Size"] || "—"}</p>
+    <p><strong>Source:</strong> ${spec["Specimen Source"] || "—"}</p>
+    <p><strong>Notes:</strong> ${spec["Notes"] || "—"}</p>
+    <p><strong>Coordinates:</strong> ${spec["Coordinates"] || "—"}</p>
+  </div>
+
+  <div id="map"></div>
+`;
 
   renderImages(); // initialize carousel
 
