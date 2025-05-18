@@ -78,6 +78,7 @@ async function showSpecimen(id) {
     .join("");
 
   // Images
+  console.log(`Checking images for specimen ${id}`);
   const extensions = ["jpg", "jpeg", "png", "webp"];
   const maxImages = 20;
   const validImages = [];

@@ -102,8 +102,8 @@ button#toggleGallery {
 
 /* === Map === */
 #map {
-  height: 600px;
-  width: 800px;
+  height: 400px;
+  width: 600px;
   margin-top: 30px;
   border-radius: 8px;
   box-shadow: 0 0 8px rgba(0,0,0,0.1);
