@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collection Map</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body, html { margin: 0; height: 100%; font-family: sans-serif; }
+    #map      { height: 100%; width: 100%; }
+  </style>
+</head>
+<body>
+
+  <!-- Simple back-to-home link -->
+  <a href="index.html" style="position:absolute;z-index:1000;
+      background:#fff;padding:6px 10px;border:1px solid #ccc;margin:8px;
+      text-decoration:none;border-radius:4px;font-size:.9rem;">← Home</a>
+
+  <div id="map"></div>
+
+  <!-- 3 libs -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="map.js"></script>
+</body>
+</html>
