@@ -62,7 +62,13 @@ Papa.parse(metaCsvUrl, {
 
 // === Render Sidebar ===
 function renderSidebar() {
-  sidebar.innerHTML = "<h2>Specimens</h2>";
+  // 1) header + search box
+  sidebar.innerHTML = `
+    <h2>Specimens</h2>
+    <input type="text" id="specimenSearch" placeholder="Search…" />
+  `;
+
+  // 2) add specimen links
   Object.entries(specimenMap).forEach(([id, spec]) => {
     const species = [
       spec["Species 1"], spec["Species 2"], spec["Species 3"],
@@ -74,6 +80,15 @@ function renderSidebar() {
     link.className = "specimen";
     link.textContent = `Cat ID: ${id} | ${species || "Unknown"}`;
     sidebar.appendChild(link);
+  });
+
+  // 3) attach the listener ONCE
+  const search = document.getElementById("specimenSearch");
+  search.addEventListener("input", () => {
+    const q = search.value.toLowerCase();
+    document.querySelectorAll("#sidebar a.specimen").forEach(a => {
+      a.style.display = a.textContent.toLowerCase().includes(q) ? "" : "none";
+    });
   });
 }
 
@@ -156,7 +171,6 @@ content.innerHTML = `
     <p><strong>Mindat Locality:</strong> ${mindatLocHtml}</p>
     <p><strong>Date Acquired:</strong> ${spec["Date of Acquisition"] || "—"}</p>
     <p><strong>Dimensions:</strong> ${spec["Dimensions"] || "—"}</p>
-    <p><strong>Max Crystal Size:</strong> ${spec["Max Crystal Size"] || "—"}</p>
     <p><strong>Source:</strong> ${spec["Specimen Source"] || "—"}</p>
     <p><strong>Notes:</strong> ${spec["Notes"] || "—"}</p>
     <p><strong>Coordinates:</strong> ${spec["Coordinates"] || "—"}</p>
