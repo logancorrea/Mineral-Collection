@@ -99,7 +99,7 @@ async function showSpecimen(id) {
 const visibleCount = 3;
 
 function renderCarousel(images) {
-  const end = Math.min(currentSlide + visibleCount, images.length);
+  const end   = Math.min(currentSlide + visibleCount, images.length);
   const shown = images.slice(currentSlide, end).map(name =>
     `<img src="images/${name}" alt="Specimen image" class="specimen-img" loading="lazy" />`
   ).join("");
@@ -108,13 +108,14 @@ function renderCarousel(images) {
   const hasNext = end < images.length;
 
   return `
-    <div class="carousel-controls">
-      <button id="prevBtn" ${hasPrev ? "" : "disabled"}>◀</button>
-      <button id="nextBtn" ${hasNext ? "" : "disabled"}>▶</button>
+    <div class="carousel-wrapper">
+      <button class="carousel-btn prev" id="prevBtn" ${hasPrev ? "" : "disabled"}>‹</button>
+      <div class="image-row">${shown}</div>
+      <button class="carousel-btn next" id="nextBtn" ${hasNext ? "" : "disabled"}>›</button>
     </div>
-    <div class="image-grid">${shown}</div>
   `;
 }
+
 
 const renderImages = () => {
   const galleryDiv = document.getElementById("gallery-content");
@@ -162,14 +163,6 @@ const renderImages = () => {
   `;
 
   renderImages(); // initialize carousel
-
-
-  if (toggleButton) {
-    document.getElementById("toggleGallery").onclick = () => {
-      document.querySelectorAll(".specimen-img").forEach(img => img.classList.remove("hidden"));
-      document.getElementById("toggleGallery").remove();
-    };
-  }
 
   // === Map ===
   const coordString = spec["Coordinates"];

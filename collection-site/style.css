@@ -154,14 +154,30 @@ button#toggleGallery {
   background-color: #eee;
 }
 
-.carousel-controls {
+.carousel-wrapper {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  align-items: center;
+  gap: 12px;
 }
 
-.carousel-controls button {
-  padding: 0.5rem 1rem;
-  font-size: 1.2rem;
+.image-row {
+  display: flex;          /* keeps the 1×3 row */
+  gap: 12px;
+  overflow: hidden;       /* hides extra images */
 }
+
+.carousel-btn {
+  background: #444;
+  color: #fff;
+  border: none;
+  font-size: 1.6rem;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.carousel-btn[disabled] {
+  opacity: 0.4;
+  cursor: default;
+}
+
