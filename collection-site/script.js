@@ -117,8 +117,8 @@ async function showSpecimen(id) {
     }
 
     const end = Math.min(currentSlide + visibleCount, images.length);
-    const shown = images.slice(currentSlide, end).map(name =>
-      `<img src="images/${name}" alt="Specimen image" class="specimen-img" loading="lazy" />`
+    const shown = images.slice(currentSlide, end).map((name, idx) =>
+      `<img src="images/${name}" alt="Specimen image" class="specimen-img carousel-img" data-img="${name}" loading="lazy" style="cursor: pointer;" />`
     ).join("");
 
     const hasPrev = currentSlide > 0;
@@ -130,32 +130,55 @@ async function showSpecimen(id) {
         <div class="image-row">${shown}</div>
         <button class="carousel-btn next" id="nextBtn" ${hasNext ? "" : "disabled"}>›</button>
       </div>
+      <div id="img-modal" class="img-modal hidden">
+        <span class="img-modal-close" id="img-modal-close">&times;</span>
+        <img class="img-modal-content" id="img-modal-img" />
+      </div>
     `;
 
-    // Add this logging
+    // Carousel buttons
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
-    console.log("prevBtn:", prevBtn, "nextBtn:", nextBtn);
 
     if (prevBtn) {
       prevBtn.addEventListener("click", () => {
-        console.log("⬅️ Prev clicked");
         currentSlide = Math.max(0, currentSlide - visibleCount);
         renderCarousel(images);
       });
-    } else {
-      console.warn("⚠️ prevBtn not found");
     }
-
     if (nextBtn) {
       nextBtn.addEventListener("click", () => {
-        console.log("➡️ Next clicked");
         currentSlide += visibleCount;
         renderCarousel(images);
       });
-    } else {
-      console.warn("⚠️ nextBtn not found");
     }
+
+    // Popout modal logic
+    const imgs = galleryDiv.querySelectorAll(".carousel-img");
+    const modal = document.getElementById("img-modal");
+    const modalImg = document.getElementById("img-modal-img");
+    const modalClose = document.getElementById("img-modal-close");
+
+    imgs.forEach(img => {
+      img.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+        modalImg.src = img.src;
+        modalImg.alt = img.alt;
+      });
+    });
+
+    modalClose.addEventListener("click", () => {
+      modal.classList.add("hidden");
+      modalImg.src = "";
+    });
+
+    // Close modal on outside click
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.add("hidden");
+        modalImg.src = "";
+      }
+    });
   }
 
   const renderImages = () => {
