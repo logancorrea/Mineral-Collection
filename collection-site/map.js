@@ -27,6 +27,8 @@ Papa.parse(metaCsvUrl, {
   }
 });
 
+let allMarkers = [];
+
 function makeMap() {
   if (!specimens.length) { alert("No coords"); return; }
 
@@ -39,22 +41,38 @@ function makeMap() {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 
-  /* ▶︎ create one cluster group ◀︎ */
   const cluster = L.markerClusterGroup({
     spiderfyOnMaxZoom: true,
     showCoverageOnHover: false,
-    maxClusterRadius: 40          // tweak if you like
+    maxClusterRadius: 40
   });
 
-  /* add every marker to the group */
-  specimens.forEach(sp => {
-    const m = L.marker([sp.lat, sp.lng])
-              .bindPopup(`<a href="index.html#${sp.id}">
-                            ${sp.title} (Cat ID: ${sp.id})
-                          </a>`);
-    cluster.addLayer(m);
+  allMarkers = specimens.map(sp => {
+    const marker = L.marker([sp.lat, sp.lng])
+      .bindPopup(`<a href="index.html#${sp.id}">${sp.title} (Cat ID: ${sp.id})</a>`);
+    cluster.addLayer(marker);
+    marker._specimenData = sp; // Attach data for search
+    return marker;
   });
 
   cluster.addTo(map);
+
+  // --- Search logic ---
+  const searchInput = document.getElementById("mapSearch");
+  if (searchInput) {
+    searchInput.addEventListener("input", function() {
+      const q = this.value.trim().toLowerCase();
+      cluster.clearLayers();
+      allMarkers.forEach(marker => {
+        const sp = marker._specimenData;
+        if (
+          sp.title.toLowerCase().includes(q) ||
+          (sp.id && sp.id.toString().includes(q))
+        ) {
+          cluster.addLayer(marker);
+        }
+      });
+    });
+  }
 }
 

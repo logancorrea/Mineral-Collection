@@ -28,7 +28,6 @@
   </style>
 </head>
 <body>
-
   <!-- same header used on your main page -->
   <header id="main-header">
     <div class="header-left">
@@ -41,6 +40,11 @@
     </div>
   </header>
 
+  <!-- Add search bar here -->
+  <div id="map-search-bar" style="padding: 1rem; background: #f4f4f4; border-bottom: 1px solid #ccc;">
+    <input type="text" id="mapSearch" placeholder="Search specimens…" style="width: 100%; max-width: 400px; padding: 0.5rem; font-size: 1rem;">
+  </div>
+
   <!-- map fills the remaining space -->
   <div id="map"></div>
 
@@ -48,8 +52,6 @@
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-
-  <!-- your marker-building logic -->
   <script src="map.js"></script>
 </body>
 </html>
