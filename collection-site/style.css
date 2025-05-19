@@ -1,10 +1,40 @@
 /* === Reset & Base === */
+html, body {
+  height: 100%;
+  overflow: hidden; /* Prevent page scroll by default */
+}
+
+/* Allow page scroll only when .scroll-page is on body */
+body.scroll-page {
+  overflow: auto;
+}
+
 body {
   margin: 0;
   font-family: sans-serif;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
   height: 100vh;
+  /* No overflow here */
+}
+
+/* Add bottom padding to main content areas for scroll comfort */
+body.scroll-page {
+  padding-bottom: 48px; /* Adjust value as needed */
+}
+
+#gallery-content {
+  padding-bottom: 48px; /* Ensures gallery page has space at the bottom */
+}
+
+#main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  height: calc(100vh - 56px); /* Subtract header height */
+  padding-bottom: 48px;
+  box-sizing: border-box;
 }
 
 /* === Header === */
@@ -44,8 +74,9 @@ body {
 /* === Main layout (under header) === */
 #layout {
   display: flex;
-  flex: 1;
-  height: 100%;
+  flex: 1 0 auto;
+  min-height: 0;
+  height: 100vh; /* Fill viewport height */
 }
 
 /* === Sidebar === */
@@ -55,6 +86,10 @@ body {
   padding: 1rem;
   overflow-y: auto;
   border-right: 1px solid #ccc;
+  height: calc(100vh - 56px); /* Subtract header height */
+  max-height: calc(100vh - 56px);
+  box-sizing: border-box;
+  margin-top: 0; /* Remove if present */
 }
 
 /* === Main Content === */
@@ -62,6 +97,9 @@ body {
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
+  height: calc(100vh - 56px); /* Subtract header height */
+  padding-bottom: 48px;
+  box-sizing: border-box;
 }
 
 /* === Specimen List Styling === */
@@ -189,6 +227,12 @@ button#toggleGallery {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+/* === Footer === */
+/* #main-footer,
+.footer-content {
+  display: none;
+} */
 
 /* Add at the end of your CSS file */
 .img-modal {
