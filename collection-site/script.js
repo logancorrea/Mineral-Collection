@@ -62,13 +62,11 @@ Papa.parse(metaCsvUrl, {
 
 // === Render Sidebar ===
 function renderSidebar() {
-  // 1) header + search box
   sidebar.innerHTML = `
     <h2>Specimens</h2>
     <input type="text" id="specimenSearch" placeholder="Search…" />
   `;
 
-  // 2) add specimen links
   Object.entries(specimenMap).forEach(([id, spec]) => {
     const species = [
       spec["Species 1"], spec["Species 2"], spec["Species 3"],
@@ -82,7 +80,6 @@ function renderSidebar() {
     sidebar.appendChild(link);
   });
 
-  // 3) attach the listener ONCE
   const search = document.getElementById("specimenSearch");
   search.addEventListener("input", () => {
     const q = search.value.toLowerCase();
@@ -108,81 +105,95 @@ async function showSpecimen(id) {
     .map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`)
     .join("");
 
-  // ✅ Use preloaded photoMap
   const fileNames = photoMap[id] || [];
   let currentSlide = 0;
-const visibleCount = 3;
+  const visibleCount = 2; // Changed from 3 to 2
 
-function renderCarousel(images) {
-  const end   = Math.min(currentSlide + visibleCount, images.length);
-  const shown = images.slice(currentSlide, end).map(name =>
-    `<img src="images/${name}" alt="Specimen image" class="specimen-img" loading="lazy" />`
-  ).join("");
+  function renderCarousel(images) {
+    const galleryDiv = document.getElementById("gallery-content");
+    if (!galleryDiv) {
+      console.error("❌ No #gallery-content found");
+      return;
+    }
 
-  const hasPrev = currentSlide > 0;
-  const hasNext = end < images.length;
+    const end = Math.min(currentSlide + visibleCount, images.length);
+    const shown = images.slice(currentSlide, end).map(name =>
+      `<img src="images/${name}" alt="Specimen image" class="specimen-img" loading="lazy" />`
+    ).join("");
 
-  return `
-    <div class="carousel-wrapper">
-      <button class="carousel-btn prev" id="prevBtn" ${hasPrev ? "" : "disabled"}>‹</button>
-      <div class="image-row">${shown}</div>
-      <button class="carousel-btn next" id="nextBtn" ${hasNext ? "" : "disabled"}>›</button>
-    </div>
-  `;
-}
+    const hasPrev = currentSlide > 0;
+    const hasNext = end < images.length;
 
+    galleryDiv.innerHTML = `
+      <div class="carousel-wrapper">
+        <button class="carousel-btn prev" id="prevBtn" ${hasPrev ? "" : "disabled"}>‹</button>
+        <div class="image-row">${shown}</div>
+        <button class="carousel-btn next" id="nextBtn" ${hasNext ? "" : "disabled"}>›</button>
+      </div>
+    `;
 
-const renderImages = () => {
-  const galleryDiv = document.getElementById("gallery-content");
-  if (galleryDiv) {
-    galleryDiv.innerHTML = renderCarousel(fileNames);
-    const next = document.getElementById("nextBtn");
-    const prev = document.getElementById("prevBtn");
+    // Add this logging
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    console.log("prevBtn:", prevBtn, "nextBtn:", nextBtn);
 
-    if (next) next.onclick = () => {
-      currentSlide += visibleCount;
-      renderImages();
-    };
-    if (prev) prev.onclick = () => {
-      currentSlide = Math.max(0, currentSlide - visibleCount);
-      renderImages();
-    };
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        console.log("⬅️ Prev clicked");
+        currentSlide = Math.max(0, currentSlide - visibleCount);
+        renderCarousel(images);
+      });
+    } else {
+      console.warn("⚠️ prevBtn not found");
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        console.log("➡️ Next clicked");
+        currentSlide += visibleCount;
+        renderCarousel(images);
+      });
+    } else {
+      console.warn("⚠️ nextBtn not found");
+    }
   }
-};
+
+  const renderImages = () => {
+    console.log("📷 Rendering image carousel...");
+    renderCarousel(fileNames);
+  };
 
 
   const mindatLocUrl = spec["Mindat Locality"];
   const mindatLocHtml = mindatLocUrl
     ? `<a href="${mindatLocUrl}" target="_blank">${mindatLocUrl}</a>` : "—";
 
-content.innerHTML = `
-  <h2>${spec["Specimen Title"] || species || `Catalog ${id}`}</h2>
+  content.innerHTML = `
+    <h2>${spec["Specimen Title"] || species || `Catalog ${id}`}</h2>
 
-  <!-- ⬇️  GALLERY NOW COMES RIGHT AFTER THE TITLE -->
-  <div class="gallery">
-    <div id="gallery-content"></div>
-  </div>
+    <div class="gallery">
+      <div id="gallery-content"></div>
+    </div>
 
-  <div class="section">
-    <p><strong>Catalog ID:</strong> ${id}</p>
-    <p><strong>Mindat ID:</strong> ${spec["MinID"] || "—"}</p>
-    <p><strong>Species:</strong> ${species || "—"}</p>
-    ${mindatLinks ? `<p><strong>Mindat Links:</strong><ul>${mindatLinks}</ul></p>` : ""}
-    <p><strong>Locality:</strong> ${spec["Locality"] || "—"}</p>
-    <p><strong>Mindat Locality:</strong> ${mindatLocHtml}</p>
-    <p><strong>Date Acquired:</strong> ${spec["Date of Acquisition"] || "—"}</p>
-    <p><strong>Dimensions:</strong> ${spec["Dimensions"] || "—"}</p>
-    <p><strong>Source:</strong> ${spec["Specimen Source"] || "—"}</p>
-    <p><strong>Notes:</strong> ${spec["Notes"] || "—"}</p>
-    <p><strong>Coordinates:</strong> ${spec["Coordinates"] || "—"}</p>
-  </div>
+    <div class="section">
+      <p><strong>Catalog ID:</strong> ${id}</p>
+      <p><strong>Mindat ID:</strong> ${spec["MinID"] || "—"}</p>
+      <p><strong>Species:</strong> ${species || "—"}</p>
+      ${mindatLinks ? `<p><strong>Mindat Links:</strong><ul>${mindatLinks}</ul></p>` : ""}
+      <p><strong>Locality:</strong> ${spec["Locality"] || "—"}</p>
+      <p><strong>Mindat Locality:</strong> ${mindatLocHtml}</p>
+      <p><strong>Date Acquired:</strong> ${spec["Date of Acquisition"] || "—"}</p>
+      <p><strong>Dimensions:</strong> ${spec["Dimensions"] || "—"}</p>
+      <p><strong>Source:</strong> ${spec["Specimen Source"] || "—"}</p>
+      <p><strong>Notes:</strong> ${spec["Notes"] || "—"}</p>
+      <p><strong>Coordinates:</strong> ${spec["Coordinates"] || "—"}</p>
+    </div>
 
-  <div id="map"></div>
-`;
+    <div id="map"></div>
+  `;
 
-  renderImages(); // initialize carousel
+  renderImages();
 
-  // === Map ===
   const coordString = spec["Coordinates"];
   if (coordString && coordString.includes(",")) {
     const [latStr, lngStr] = coordString.split(",").map(s => s.trim());
