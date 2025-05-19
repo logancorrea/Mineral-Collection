@@ -1,11 +1,9 @@
 const metaCsvUrl = "https://docs.google.com/spreadsheets/d/1KWMTZaLluEq3l0XPYcfM1gixYcynKklUfWFdDePV05g/gviz/tq?tqx=out:csv&sheet=Database";
-const photoCsvUrl = "https://docs.google.com/spreadsheets/d/1KWMTZaLluEq3l0XPYcfM1gixYcynKklUfWFdDePV05g/gviz/tq?tqx=out:csv&sheet=photo_ids";
 
 const sidebar = document.getElementById("sidebar");
 const content = document.getElementById("main-content");
 
 const specimenMap = {};
-const photoMap = {};
 
 // === Utility: Check if image exists ===
 async function imageExists(url) {
@@ -16,20 +14,6 @@ async function imageExists(url) {
     return false;
   }
 }
-
-// === Load photo_ids CSV ===
-Papa.parse(photoCsvUrl, {
-  download: true,
-  header: true,
-  complete: (results) => {
-    results.data.forEach(row => {
-      const id = parseInt(row["Catalog ID"]);
-      if (!isNaN(id) && row["File Names"]) {
-        photoMap[id] = row["File Names"].split(",").map(s => s.trim());
-      }
-    });
-  }
-});
 
 // === Load Database CSV ===
 Papa.parse(metaCsvUrl, {
@@ -105,9 +89,11 @@ async function showSpecimen(id) {
     .map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`)
     .join("");
 
-  const fileNames = photoMap[id] || [];
+  // Use images from folder, not Google Sheet
+  const fileNames = await getSpecimenImages(id);
+
   let currentSlide = 0;
-  const visibleCount = 2; // Changed from 3 to 2
+  const visibleCount = 2;
 
   function renderCarousel(images) {
     const galleryDiv = document.getElementById("gallery-content");
@@ -118,7 +104,8 @@ async function showSpecimen(id) {
 
     const end = Math.min(currentSlide + visibleCount, images.length);
     const shown = images.slice(currentSlide, end).map((name, idx) =>
-      `<img src="images/${name}" alt="Specimen image" class="specimen-img carousel-img" data-img="${name}" loading="lazy" style="cursor: pointer;" />`
+      // NEW (use the full URL as returned by getSpecimenImages)
+    `<img src="${name}" alt="Specimen image" class="specimen-img carousel-img" data-img="${name}" loading="lazy" style="cursor: pointer;" />`
     ).join("");
 
     const hasPrev = currentSlide > 0;
@@ -236,6 +223,37 @@ async function showSpecimen(id) {
     document.getElementById("map").innerHTML = "<p>No coordinates available.</p>";
   }
 }
+
+/**
+ * Returns an array of image URLs for a given specimen id.
+ * Checks for id.jpg, id-2.jpg, id-3.jpg, ... up to maxImages.
+ */
+async function getSpecimenImages(id, maxImages = 5) {
+  const urls = [];
+  for (let i = 1; i <= maxImages; i++) {
+    const suffix = i === 1 ? '' : `-${i}`;
+    const url = `images/${id}${suffix}.jpg`;
+    try {
+      const res = await fetch(url, { method: "HEAD" });
+      if (res.ok) {
+        urls.push(url);
+      } else {
+        if (i === 1) break; // If the first image doesn't exist, stop
+        else break; // Stop at first missing image in sequence
+      }
+    } catch {
+      break;
+    }
+  }
+  return urls;
+}
+
+// Example usage:
+// getSpecimenImages(1).then(urls => {
+//   // urls = ["images/1.jpg", "images/1-2.jpg", ...]
+//   // Render these images in your UI
+// });
+
 
 // === Handle hash navigation on page load or hash change ===
 function loadFromHash() {
