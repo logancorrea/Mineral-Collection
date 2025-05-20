@@ -57,16 +57,16 @@ function renderSidebar() {
       spec["Species 4"], spec["Species 5"]
     ].filter(Boolean).join(", ");
 
-    // Add "Cat ID: xxx | " to specimens that have titles
+    // Add "xxx | " to specimens that have titles
     const title = spec["Specimen Title"]?.trim();
     const label = title
-      ? `Cat ID: ${id} | ${title}`
-      : `Cat ID: ${id} | ${species || "Unknown"}`;
+      ? `<span class="specimen-id">${id}</span> | ${title}`
+      : `<span class="specimen-id">${id}</span> | ${species || "Unknown"}`;
 
     const link = document.createElement("a");
     link.href = `#${id}`;
     link.className = "specimen";
-    link.textContent = label;
+    link.innerHTML = label; // Use innerHTML to allow HTML tags
     sidebar.appendChild(link);
   });
 
@@ -198,7 +198,7 @@ async function showSpecimen(id) {
       ${mindatLinks ? `<p><strong>Mindat Links:</strong><ul>${mindatLinks}</ul></p>` : ""}
       <p><strong>Locality:</strong> ${spec["Locality"] || "—"}</p>
       <p><strong>Mindat Locality:</strong> ${mindatLocHtml}</p>
-      <p><strong>Date Acquired:</strong> ${spec["Date of Acquisition"] || "—"}</p>
+      <p><strong>Year Acquired:</strong> ${spec["Year of Acquisition"] || "—"}</p>
       <p><strong>Dimensions:</strong> ${spec["Dimensions"] || "—"}</p>
       <p><strong>Source:</strong> ${spec["Specimen Source"] || "—"}</p>
       <p><strong>Notes:</strong> ${spec["Notes"] || "—"}</p>

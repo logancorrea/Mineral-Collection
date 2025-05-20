@@ -271,3 +271,7 @@ button#toggleGallery {
   z-index: 2100;
   text-shadow: 0 2px 8px #000;
 }
+
+.specimen-id {
+  font-weight: bold;
+}
