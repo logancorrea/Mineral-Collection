@@ -57,10 +57,16 @@ function renderSidebar() {
       spec["Species 4"], spec["Species 5"]
     ].filter(Boolean).join(", ");
 
+    // Add "Cat ID: xxx | " to specimens that have titles
+    const title = spec["Specimen Title"]?.trim();
+    const label = title
+      ? `Cat ID: ${id} | ${title}`
+      : `Cat ID: ${id} | ${species || "Unknown"}`;
+
     const link = document.createElement("a");
     link.href = `#${id}`;
     link.className = "specimen";
-    link.textContent = `Cat ID: ${id} | ${species || "Unknown"}`;
+    link.textContent = label;
     sidebar.appendChild(link);
   });
 
