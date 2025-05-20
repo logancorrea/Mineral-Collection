@@ -236,20 +236,24 @@ async function showSpecimen(id) {
  */
 async function getSpecimenImages(id, maxImages = 5) {
   const urls = [];
+  const extensions = ["jpg", "JPG"]; // Add both lowercase and uppercase
   for (let i = 1; i <= maxImages; i++) {
     const suffix = i === 1 ? '' : `-${i}`;
-    const url = `images/${id}${suffix}.jpg`;
-    try {
-      const res = await fetch(url, { method: "HEAD" });
-      if (res.ok) {
-        urls.push(url);
-      } else {
-        if (i === 1) break; // If the first image doesn't exist, stop
-        else break; // Stop at first missing image in sequence
+    let found = false;
+    for (const ext of extensions) {
+      const url = `images/${id}${suffix}.${ext}`;
+      try {
+        const res = await fetch(url, { method: "HEAD" });
+        if (res.ok) {
+          urls.push(url);
+          found = true;
+          break; // Stop checking other extensions for this index
+        }
+      } catch {
+        // ignore
       }
-    } catch {
-      break;
     }
+    if (!found) break; // Stop at first missing image in sequence
   }
   return urls;
 }
