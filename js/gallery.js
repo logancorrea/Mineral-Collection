@@ -42,14 +42,26 @@ Papa.parse(metaCsvUrl, {
         spec["Species 3"], spec["Species 4"], spec["Species 5"]
       ].filter(Boolean).join(", ");
 
+      const title = spec["Specimen Title"]?.trim();
+
+      // Label: Title (or species if missing), then Catalog ID
+      let labelMain = title ? title : (species ? species : "Specimen");
+      let label = `<span style="font-weight:600;">${labelMain}</span><br><span style="font-size:0.95em;color:#888;">Catalog ID: ${id}</span>`;
+
+      const searchTitle = title ? title.toLowerCase() : "";
+      const speciesStr = species.toLowerCase();
+      const idStr = id.toString();
+
       const imageUrl = await getFirstImageUrl(id);
 
       const card = document.createElement("div");
       card.className = "gallery-card";
+      // Store searchable fields as data attributes for fast filtering
+      card.dataset.search = `${idStr} ${searchTitle} ${speciesStr}`;
       card.innerHTML = `
         <a href="index.html#${id}">
           <img src="${imageUrl}" alt="Specimen ${id}" />
-          <div class="caption">Catalog ID: ${id}<br>${species || "—"}</div>
+          <div class="caption">${label}</div>
         </a>
       `;
       galleryGrid.appendChild(card);
@@ -60,8 +72,8 @@ Papa.parse(metaCsvUrl, {
     searchInput.addEventListener("input", function() {
       const q = this.value.trim().toLowerCase();
       document.querySelectorAll("#gallery-grid .gallery-card").forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(q) ? "" : "none";
+        const searchText = card.dataset.search;
+        card.style.display = searchText.includes(q) ? "" : "none";
       });
     });
   }
