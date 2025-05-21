@@ -2,13 +2,14 @@
 :root {
   --primary: #B2C9AD;
   --header-bg: #537D5D;
-  --sidebar-bg: #73946B;
+  --sidebar-bg: #B2C9AD;
   --accent: #537D5D;
   --accent-hover: #73946B;
   --background: #D2D0A0;
   --text: #5e481e;
-  --sidebar-text: #B2C9AD;
+  --sidebar-text: #537D5D;
   --sidebar-link-hover: #537D5D;
+  --sidebar-text-hover: #B2C9AD;
   --link-hover-color: #73946B;
   --picture-border: #537D5D;
   --picture-hover: #73946B;
@@ -150,7 +151,11 @@ body {
 
 #sidebar a.specimen:hover {
   background: var(--sidebar-link-hover);
-  color: var(--sidebar-text);
+  color: var(--sidebar-text-hover);
+}
+
+#sidebar a.specimen:hover .specimen-id {
+  color: var(--sidebar-text-hover);
 }
 
 #sidebar a.specimen .specimen-id {
