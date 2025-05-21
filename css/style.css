@@ -394,3 +394,31 @@ button#toggleGallery {
   margin: 1rem 0;
   padding: 0.5rem 1rem;
 }
+
+
+
+/* Only show background image on homepage */
+.home {
+  background: var(--background);
+}
+
+.home::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('../images/bg3.jpg') no-repeat center center fixed;
+  background-size: cover;
+  opacity: 0.22;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.home > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Make main-content backgrounds transparent ONLY on homepage */
+.home #main-content {
+  background: transparent !important;
+}
