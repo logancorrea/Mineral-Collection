@@ -1,7 +1,7 @@
 const metaCsvUrl = "https://docs.google.com/spreadsheets/d/1KWMTZaLluEq3l0XPYcfM1gixYcynKklUfWFdDePV05g/gviz/tq?tqx=out:csv&sheet=Database";
 
 const galleryGrid = document.getElementById("gallery-grid");
-const extensions = ["jpg", "jpeg", "png", "webp"];
+const extensions = ["jpg", "JPG", "jpeg", "png", "webp"];
 
 async function imageExists(url) {
   try {
