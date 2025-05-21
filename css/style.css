@@ -9,11 +9,11 @@
   --text: #5e481e;
   --sidebar-text: #B2C9AD;
   --sidebar-link-hover: #537D5D;
-  --link-hover-color: #B2C9AD;
-  --picture-border: #73946B;
-  --picture-hover: #537D5D;
-  --links: #73946B;
-  --main-title: #537D5D; /* Add your preferred main content title color */
+  --link-hover-color: #73946B;
+  --picture-border: #537D5D;
+  --picture-hover: #73946B;
+  --links: #537D5D;
+  --main-title: #5e481e;
 }
 
 /* === Reset & Base === */
@@ -284,8 +284,8 @@ body {
 .specimen-img {
   border: 3px solid var(--picture-border);
   border-radius: 8px;
-  max-width: 320px;
-  max-height: 320px;
+  max-width: 400px;
+  max-height: 400px;
   background: #fff;
   transition: border 0.2s, box-shadow 0.2s;
   cursor: pointer;
@@ -397,28 +397,42 @@ button#toggleGallery {
 
 
 
-/* Only show background image on homepage */
-.home {
+/* Only show background image on homepage, gallery, and map page */
+.home,
+.scroll-page,
+.map-page {
   background: var(--background);
 }
 
-.home::before {
+.home::before,
+.scroll-page::before,
+.map-page::before {
   content: "";
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: url('../images/bg3.jpg') no-repeat center center fixed;
+  background: url('../images/bg2.jpg') no-repeat center center fixed;
   background-size: cover;
-  opacity: 0.22;
+  opacity: 0.15;
   z-index: 0;
   pointer-events: none;
 }
 
-.home > * {
+.home > *,
+.scroll-page > *,
+.map-page > * {
   position: relative;
   z-index: 1;
 }
 
-/* Make main-content backgrounds transparent ONLY on homepage */
-.home #main-content {
+/* Make main-content, gallery-content, and map backgrounds transparent ONLY on their respective pages */
+.home #main-content,
+.scroll-page #gallery-content,
+.map-page #map {
+  background: transparent !important;
+}
+
+/* Make carousel/gallery backgrounds transparent on home and gallery pages */
+.home #gallery-content,
+.scroll-page #gallery-content {
   background: transparent !important;
 }
