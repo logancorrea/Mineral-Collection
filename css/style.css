@@ -1,29 +1,30 @@
 /* === Color Palette Variables === */
 :root {
-  --primary: #5e481e;
-  --header-bg: #B2C9AD;
-  --sidebar-bg: #fffdee;
-  --accent: #5e481e;
-  --accent-hover: #81642e;
-  --background: #fffdee;
+  --primary: #B2C9AD;
+  --header-bg: #537D5D;
+  --sidebar-bg: #73946B;
+  --accent: #537D5D;
+  --accent-hover: #73946B;
+  --background: #D2D0A0;
   --text: #5e481e;
-  --sidebar-text: #5e481e;
-  --sidebar-link-hover: #ffdda3;
+  --sidebar-text: #B2C9AD;
+  --sidebar-link-hover: #537D5D;
   --link-hover-color: #B2C9AD;
-  --picture-border: #B2C9AD; /* Updated to new color */
-  --picture-hover: #5e481e; /* Added for unified picture/button hover */
+  --picture-border: #73946B;
+  --picture-hover: #537D5D;
+  --links: #73946B;
+  --main-title: #537D5D; /* Add your preferred main content title color */
 }
 
 /* === Reset & Base === */
 html, body {
   height: 100%;
-  overflow: hidden; /* Prevent page scroll by default */
+  overflow: hidden;
 }
 
-/* Allow page scroll only when .scroll-page is on body */
 body.scroll-page {
   overflow: auto;
-  padding-bottom: 48px; /* Adjust value as needed */
+  padding-bottom: 48px;
 }
 
 body {
@@ -35,20 +36,6 @@ body {
   height: 100vh;
   background: var(--background);
   color: var(--text);
-  /* No overflow here */
-}
-
-#gallery-content {
-  padding-bottom: 48px; /* Ensures gallery page has space at the bottom */
-}
-
-#main-content {
-  flex: 1;
-  padding: 2rem;
-  overflow-y: auto;
-  height: calc(100vh - 56px); /* Subtract header height */
-  padding-bottom: 48px;
-  box-sizing: border-box;
 }
 
 /* === Header === */
@@ -65,7 +52,7 @@ body {
   z-index: 1000;
   justify-content: space-between;
   position: relative;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.10); /* Add this line for shadow */
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
 }
 
 .header-left {
@@ -97,7 +84,6 @@ body {
   z-index: 1;
 }
 
-/* To ensure buttons are clickable and not blocked by the centered title */
 .header-title span {
   pointer-events: auto;
 }
@@ -113,13 +99,12 @@ body {
   color: var(--accent-hover);
 }
 
-
 /* === Main layout (under header) === */
 #layout {
   display: flex;
   flex: 1 0 auto;
   min-height: 0;
-  height: 100vh; /* Fill viewport height */
+  height: 100vh;
 }
 
 /* === Sidebar === */
@@ -129,16 +114,16 @@ body {
   color: var(--sidebar-text);
   padding: 1.5em 1em;
   min-width: 220px;
-  height: calc(100vh - 56px); /* Subtract header height */
+  height: calc(100vh - 56px);
   max-height: calc(100vh - 56px);
   box-sizing: border-box;
   overflow-y: auto;
   border-right: 1px solid var(--primary);
-  margin-top: 0; /* Remove if present */
+  margin-top: 0;
 }
 
 #sidebar h2 {
-  color: var(--primary);
+  color: var(--sidebar-text);
   margin-top: 0;
 }
 
@@ -154,21 +139,22 @@ body {
 
 #sidebar a.specimen {
   display: block;
-  color: var(--sidebar-text); /* Ensures both text and id use the same color */
+  color: var(--sidebar-text);
   text-decoration: none;
   padding: 0.4em 0.2em;
   border-radius: 3px;
   border-bottom: 1px solid var(--accent);
   transition: background 0.2s, color 0.2s;
+  cursor: pointer;
 }
 
 #sidebar a.specimen:hover {
   background: var(--sidebar-link-hover);
-  color: var(--sidebar-text); /* Keep text color the same on hover */
+  color: var(--sidebar-text);
 }
 
 #sidebar a.specimen .specimen-id {
-  color: var (--sidebar-text); /* Match the color of the rest of the text */
+  color: var(--sidebar-text);
   font-weight: bold;
 }
 
@@ -177,10 +163,29 @@ body {
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
-  height: calc(100vh - 56px); /* Subtract header height */
+  height: calc(100vh - 56px);
   padding-bottom: 48px;
   box-sizing: border-box;
   background: var(--background);
+}
+
+/* Only apply --links color to links inside #main-content (specimen pages) */
+#main-content a {
+  color: var(--links);
+  transition: color 0.2s, background 0.2s;
+  text-decoration: none;
+}
+
+#main-content a:hover,
+#main-content a:focus {
+  color: var(--picture-hover);
+}
+
+/* Apply to main content titles */
+#main-content h1,
+#main-content h2,
+#main-content h3 {
+  color: var(--main-title);
 }
 
 /* === Specimen List Styling === */
@@ -242,171 +247,7 @@ body {
   color: var(--text);
 }
 
-#sidebar a.specimen {
-  display: block;
-  padding: 6px;
-  color: inherit;
-  text-decoration: none;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-}
-
-#sidebar a.specimen:hover {
-  background-color: #eee;
-}
-
-.carousel-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.image-row {
-  display: flex;          /* keeps the 1×3 row */
-  gap: 12px;
-  overflow: hidden;       /* hides extra images */
-}
-
-.carousel-btn {
-  background: var(--picture-border); /* Match carousel button color to picture border */
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 2.2em;
-  height: 2.2em;
-  font-size: 1.5em;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.carousel-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.carousel-btn:hover:not(:disabled) {
-  background: var(--picture-hover);
-}
-
-#specimenSearch {
-  width: 100%;
-  padding: 6px 8px;
-  margin: 6px 0 12px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* === Footer === */
-/* #main-footer,
-.footer-content {
-  display: none;
-} */
-
-/* Add at the end of your CSS file */
-.img-modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  z-index: 2000;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.8);
-}
-
-.img-modal.hidden {
-  display: none;
-}
-
-.img-modal-content {
-  max-width: 90vw;
-  max-height: 90vh;
-  border-radius: 8px;
-  box-shadow: 0 0 24px #000a;
-  background: #fff;
-}
-
-.img-modal-close {
-  position: absolute;
-  top: 32px;
-  right: 48px;
-  color: #fff;
-  font-size: 2.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 2100;
-  text-shadow: 0 2px 8px #000;
-}
-
-.specimen-id {
-  font-weight: bold;
-  color: var(--accent);
-}
-
-/* --- General Styles --- */
-body {
-  background: var(--background);
-  color: var(--text);
-  font-family: 'Segoe UI', Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-/* --- Sidebar --- */
-#sidebar {
-  background: var(--sidebar-bg);
-  color: var(--sidebar-text);
-  padding: 1.5em 1em;
-  min-width: 220px;
-  height: 100vh;
-  box-sizing: border-box;
-}
-
-#sidebar h2 {
-  color: var(--primary);
-  margin-top: 0;
-}
-
-#sidebar input[type="text"] {
-  width: 90%;
-  padding: 0.4em;
-  border: 1px solid var(--primary);
-  border-radius: 4px;
-  margin-bottom: 1em;
-  background: #fff;
-  color: var(--text);
-}
-
-#sidebar a.specimen {
-  display: block;
-  color: var(--sidebar-text); /* Ensures both text and id use the same color */
-  text-decoration: none;
-  padding: 0.4em 0.2em;
-  border-radius: 3px;
-  border-bottom: 1px solid var(--accent);
-  transition: background 0.2s, color 0.2s;
-}
-
-#sidebar a.specimen:hover {
-  background: var(--sidebar-link-hover);
-  color: var(--sidebar-text); /* Keep text color the same on hover */
-}
-
-#sidebar a.specimen .specimen-id {
-  color: var(--sidebar-text); /* Match the color of the rest of the text */
-  font-weight: bold;
-}
-
-/* --- Main Content --- */
-#main {
-  padding: 2em;
-  background: var(--background);
-}
-
-/* --- Carousel --- */
+/* === Carousel === */
 .carousel-wrapper {
   display: flex;
   align-items: center;
@@ -414,7 +255,7 @@ body {
 }
 
 .carousel-btn {
-  background: var(--picture-border); /* Match carousel button color to picture border */
+  background: var(--picture-border);
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -437,10 +278,11 @@ body {
 .image-row {
   display: flex;
   gap: 1em;
+  overflow: hidden;
 }
 
 .specimen-img {
-  border: 3px solid var(--picture-border); /* Use the picture border variable */
+  border: 3px solid var(--picture-border);
   border-radius: 8px;
   max-width: 320px;
   max-height: 320px;
@@ -521,7 +363,7 @@ a:focus {
   color: var(--text);
 }
 #map {
-  height: calc(100vh - 56px - 66px); /* header + search bar */
+  height: calc(100vh - 56px - 66px);
   width: 100%;
   border-radius: 8px;
   box-shadow: 0 0 8px rgba(0,0,0,0.1);
