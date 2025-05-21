@@ -54,5 +54,15 @@ Papa.parse(metaCsvUrl, {
       `;
       galleryGrid.appendChild(card);
     }
+
+    // --- Add search functionality ---
+    const searchInput = document.getElementById("gallerySearch");
+    searchInput.addEventListener("input", function() {
+      const q = this.value.trim().toLowerCase();
+      document.querySelectorAll("#gallery-grid .gallery-card").forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(q) ? "" : "none";
+      });
+    });
   }
 });
