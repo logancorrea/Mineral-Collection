@@ -61,19 +61,22 @@ body {
   align-items: center;
   gap: 20px;
   flex: 0 0 auto;
+  font-family: 'Georgia', serif;
 }
 
 .header-title {
   flex: 1 1 auto;
   text-align: center;
-  font-size: 1.5em;
-  font-weight: bold;
+  font-size: 2.2em;           /* Larger font size */
+  font-weight: 700;           /* Bolder */
   color: var(--primary);
   margin: 0;
   position: absolute;
   left: 0;
   right: 0;
   pointer-events: none;
+  font-family: 'Georgia', serif; /* Change to a serif font */
+  text-shadow: 1px 1px 6px #537D5D44; /* Subtle shadow for contrast */
 }
 
 .header-nav {
@@ -98,6 +101,14 @@ body {
 
 .header-nav a:hover {
   color: var(--accent-hover);
+}
+
+/* Highlight the current page's header nav link */
+.header-nav a.active,
+.header-nav a.active:hover {
+  color: var(--accent-hover) !important;
+  pointer-events: none;
+  cursor: default;
 }
 
 /* === Main layout (under header) === */
@@ -126,6 +137,7 @@ body {
 #sidebar h2 {
   color: var(--sidebar-text);
   margin-top: 0;
+  font-family: 'Georgia', serif;
 }
 
 #sidebar input[type="text"] {
@@ -191,6 +203,7 @@ body {
 #main-content h2,
 #main-content h3 {
   color: var(--main-title);
+  font-family: 'Georgia', serif;
 }
 
 /* === Specimen List Styling === */
@@ -440,4 +453,9 @@ button#toggleGallery {
 .home #gallery-content,
 .scroll-page #gallery-content {
   background: transparent !important;
+}
+
+.scroll-page #gallery-content h2 {
+  font-family: 'Georgia', serif;
+  text-align: center;
 }
