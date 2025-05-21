@@ -371,6 +371,20 @@ a:focus {
   display: block;
 }
 
+/* Make the map on specimen pages smaller */
+#main-content #map {
+  height: 320px;
+  max-width: 500px;
+  margin: 2rem auto 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  width: 100%;
+  display: block;
+  border: 3px solid var(--picture-border);
+  /* left align the map */
+  margin-left: 0;
+}
+
 /* === Misc === */
 .hidden {
   display: none;
