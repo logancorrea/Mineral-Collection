@@ -9,43 +9,59 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+  <!-- Main site CSS for palette and layout -->
+  <link rel="stylesheet" href="css/style.css" />
 
   <style>
-    body,html { margin:0; height:100%; font-family:sans-serif; }
-
-    /* --- header (same as index) --- */
-    #main-header{
-      display:flex;align-items:center;background:#444;color:#fff;
-      padding:10px 20px;position:sticky;top:0;z-index:1000;
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      overflow: hidden;
     }
-    .header-left{display:flex;align-items:center;gap:20px}
-    .header-title{font-size:1.5em;font-weight:bold}
-    .header-nav a{color:#fff;margin-left:10px;text-decoration:none}
-    .header-nav a:hover{text-decoration:underline}
-
-    /* --- map area --- */
-    #map{height:calc(100% - 56px); /* header ≈ 56 px */ width:100%;}
+    #map-search-bar {
+      padding: .75rem;
+      background: var(--sidebar-bg);
+      border-bottom: 1px solid var(--primary);
+    }
+    #mapSearch {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid var(--primary);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--text);
+    }
+    #map {
+      height: calc(100vh - 56px - 66px); /* header + search bar */
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <!-- same header used on your main page -->
   <header id="main-header">
     <div class="header-left">
-      <div class="header-title">Correa Collection</div>
       <nav class="header-nav">
         <a href="index.html">Home</a>
-        <a href="map.html">Map</a>
+        <a href="map.html" class="active">Map</a>
         <a href="gallery.html">Gallery</a>
       </nav>
     </div>
+    <div class="header-title">Correa Collection</div>
   </header>
 
-  <!-- Add search bar here -->
-  <div id="map-search-bar" style="padding: 1rem; background: #f4f4f4; border-bottom: 1px solid #ccc;">
-    <input type="text" id="mapSearch" placeholder="Search specimens…" style="width: 100%; max-width: 400px; padding: 0.5rem; font-size: 1rem;">
+  <div id="map-search-bar">
+    <input type="text" id="mapSearch" placeholder="Search specimens…">
   </div>
 
-  <!-- map fills the remaining space -->
   <div id="map"></div>
 
   <!-- libs -->
