@@ -2,15 +2,16 @@
 :root {
   --primary: #5e481e;
   --header-bg: #B2C9AD;
-  --sidebar-bg: #B2C9AD;
-  --accent: #ffdda3;
+  --sidebar-bg: #fffdee;
+  --accent: #5e481e;
   --accent-hover: #81642e;
   --background: #fffdee;
   --text: #5e481e;
   --sidebar-text: #5e481e;
-  --sidebar-link-hover: #B2C9AD;
+  --sidebar-link-hover: #ffdda3;
   --link-hover-color: #B2C9AD;
-  --picture-border: #ffdda3; 
+  --picture-border: #B2C9AD; /* Updated to new color */
+  --picture-hover: #5e481e; /* Added for unified picture/button hover */
 }
 
 /* === Reset & Base === */
@@ -57,8 +58,8 @@ body {
   background: var(--header-bg);
   color: var(--primary);
   padding: 20px 32px;
-  min-height: 40px;      /* Change this value to adjust header height */
-  font-size: 1.35em;     /* Change this value to adjust header text size */
+  min-height: 40px;
+  font-size: 1.35em;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -228,6 +229,11 @@ body {
   object-fit: cover;
   display: block;
   background: var(--picture-border);
+  transition: border-color 0.2s;
+}
+
+.gallery-card img:hover {
+  border-color: var(--picture-hover);
 }
 
 .gallery-card .caption {
@@ -262,18 +268,24 @@ body {
 }
 
 .carousel-btn {
-  background: var(--primary);
+  background: var(--picture-border); /* Match carousel button color to picture border */
   color: #fff;
   border: none;
-  font-size: 1.6rem;
-  padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: 50%;
+  width: 2.2em;
+  height: 2.2em;
+  font-size: 1.5em;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
-.carousel-btn[disabled] {
-  opacity: 0.4;
-  cursor: default;
+.carousel-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.carousel-btn:hover:not(:disabled) {
+  background: var(--picture-hover);
 }
 
 #specimenSearch {
@@ -402,7 +414,7 @@ body {
 }
 
 .carousel-btn {
-  background: var(--primary);
+  background: var(--picture-border); /* Match carousel button color to picture border */
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -419,7 +431,7 @@ body {
 }
 
 .carousel-btn:hover:not(:disabled) {
-  background: var(--accent-hover);
+  background: var(--picture-hover);
 }
 
 .image-row {
@@ -428,17 +440,17 @@ body {
 }
 
 .specimen-img {
-  border: 3px solid var(--accent);
+  border: 3px solid var(--picture-border); /* Use the picture border variable */
   border-radius: 8px;
-  max-width: 320px;      /* was 140px */
-  max-height: 320px;     /* was 140px */
+  max-width: 320px;
+  max-height: 320px;
   background: #fff;
   transition: border 0.2s, box-shadow 0.2s;
   cursor: pointer;
 }
 
 .specimen-img:hover {
-  border: 3px solid var(--picture-border);
+  border-color: var(--picture-hover);
   box-shadow: 0 2px 12px #0002;
 }
 
