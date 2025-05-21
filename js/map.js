@@ -17,9 +17,14 @@ Papa.parse(metaCsvUrl, {
       if (obj["Coordinates"] && obj["Coordinates"].includes(",")) {
         const [lat,lng] = obj["Coordinates"].split(",").map(s=>parseFloat(s));
         if (!isNaN(lat) && !isNaN(lng))
-          specimens.push({ lat, lng,
+          specimens.push({ 
+            lat, lng,
             id: obj["Catalog ID"],
-            title: obj["Specimen Title"] || obj["Species 1"] || "Specimen"
+            title: obj["Specimen Title"] || "",
+            species: [
+              obj["Species 1"], obj["Species 2"], obj["Species 3"],
+              obj["Species 4"], obj["Species 5"]
+            ].filter(Boolean).join(", ")
           });
       }
     });
@@ -49,7 +54,7 @@ function makeMap() {
 
   allMarkers = specimens.map(sp => {
     const marker = L.marker([sp.lat, sp.lng])
-      .bindPopup(`<a href="index.html#${sp.id}">${sp.title} (Cat ID: ${sp.id})</a>`);
+      .bindPopup(`<a href="index.html#${sp.id}">${sp.title || sp.species || "Specimen"} (Cat ID: ${sp.id})</a>`);
     cluster.addLayer(marker);
     marker._specimenData = sp; // Attach data for search
     return marker;
@@ -57,7 +62,7 @@ function makeMap() {
 
   cluster.addTo(map);
 
-  // --- Search logic ---
+  // --- Unified search logic: id, title, species ---
   const searchInput = document.getElementById("mapSearch");
   if (searchInput) {
     searchInput.addEventListener("input", function() {
@@ -65,10 +70,11 @@ function makeMap() {
       cluster.clearLayers();
       allMarkers.forEach(marker => {
         const sp = marker._specimenData;
-        if (
-          sp.title.toLowerCase().includes(q) ||
-          (sp.id && sp.id.toString().includes(q))
-        ) {
+        const id = sp.id ? sp.id.toString() : "";
+        const title = (sp.title || "").toLowerCase();
+        const species = (sp.species || "").toLowerCase();
+        const searchText = `${id} ${title} ${species}`;
+        if (searchText.includes(q)) {
           cluster.addLayer(marker);
         }
       });

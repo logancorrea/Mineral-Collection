@@ -57,7 +57,6 @@ function renderSidebar() {
       spec["Species 4"], spec["Species 5"]
     ].filter(Boolean).join(", ");
 
-    // Add "xxx | " to specimens that have titles
     const title = spec["Specimen Title"]?.trim();
     const label = title
       ? `<span class="specimen-id">${id}</span> | ${title}`
@@ -66,17 +65,34 @@ function renderSidebar() {
     const link = document.createElement("a");
     link.href = `#${id}`;
     link.className = "specimen";
-    link.innerHTML = label; // Use innerHTML to allow HTML tags
+    link.dataset.id = id;
+    link.dataset.title = title || "";
+    link.dataset.species = species;
+    link.innerHTML = label;
     sidebar.appendChild(link);
   });
 
-  const search = document.getElementById("specimenSearch");
-  search.addEventListener("input", () => {
-    const q = search.value.toLowerCase();
-    document.querySelectorAll("#sidebar a.specimen").forEach(a => {
-      a.style.display = a.textContent.toLowerCase().includes(q) ? "" : "none";
+  // --- Unified search logic for all searchbars ---
+  function filterSpecimens(query) {
+    const q = query.trim().toLowerCase();
+    document.querySelectorAll("#sidebar a.specimen").forEach(link => {
+      const id = link.dataset.id || "";
+      const title = (link.dataset.title || "").toLowerCase();
+      const species = (link.dataset.species || "").toLowerCase();
+      const searchText = `${id} ${title} ${species}`;
+      link.style.display = searchText.includes(q) ? "" : "none";
     });
-  });
+  }
+
+  // Listen to both possible searchbars for the sidebar
+  const search1 = document.getElementById("specimenSearch");
+  if (search1) {
+    search1.addEventListener("input", () => filterSpecimens(search1.value));
+  }
+  const search2 = document.getElementById("sidebarSearch");
+  if (search2) {
+    search2.addEventListener("input", () => filterSpecimens(search2.value));
+  }
 }
 
 // === Main Viewer ===
