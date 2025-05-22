@@ -140,9 +140,15 @@ async function showSpecimen(id) {
         <button class="carousel-btn next" id="nextBtn" ${hasNext ? "" : "disabled"}>›</button>
       </div>
       <div id="img-modal" class="img-modal hidden">
-        <span class="img-modal-close" id="img-modal-close">&times;</span>
-        <img class="img-modal-content" id="img-modal-img" />
-        <div id="img-modal-desc" class="img-modal-desc" style="color:#fff; text-align:center; margin-top:1em;"></div>
+        <div style="display:flex; flex-direction:row; align-items:center; justify-content:center;">
+          <button class="carousel-btn" id="modalPrevBtn" style="margin-right:1em;">‹</button>
+          <div style="display:flex; flex-direction:column; align-items:center; position:relative;">
+            <span class="img-modal-close" id="img-modal-close" style="position:absolute; left:0; top:0; font-size:2.5em; color:#fff; cursor:pointer; z-index:10; padding:0 16px;">&times;</span>
+            <img class="img-modal-content" id="img-modal-img" />
+            <div id="img-modal-desc" class="img-modal-desc" style="color:#fff; text-align:center; margin-top:1em; max-width:90vw;"></div>
+          </div>
+          <button class="carousel-btn" id="modalNextBtn" style="margin-left:1em;">›</button>
+        </div>
       </div>
     `;
 
@@ -168,16 +174,47 @@ async function showSpecimen(id) {
     const modal = document.getElementById("img-modal");
     const modalImg = document.getElementById("img-modal-img");
     const modalClose = document.getElementById("img-modal-close");
+    const modalPrevBtn = document.getElementById("modalPrevBtn");
+    const modalNextBtn = document.getElementById("modalNextBtn");
 
-    imgs.forEach(img => {
+    let modalIndex = 0;
+
+    imgs.forEach((img, idx) => {
       img.addEventListener("click", () => {
         modal.classList.remove("hidden");
         modalImg.src = img.src;
         modalImg.alt = img.alt;
-        // Show description in modal
         document.getElementById("img-modal-desc").textContent = description;
+        modalIndex = currentSlide + idx;
+        updateModalButtons();
       });
     });
+
+    function updateModalButtons() {
+      if (modalPrevBtn) modalPrevBtn.disabled = (modalIndex <= 0);
+      if (modalNextBtn) modalNextBtn.disabled = (modalIndex >= images.length - 1);
+    }
+
+    if (modalPrevBtn) {
+      modalPrevBtn.addEventListener("click", () => {
+        if (modalIndex > 0) {
+          modalIndex--;
+          modalImg.src = images[modalIndex];
+          modalImg.alt = description;
+          updateModalButtons();
+        }
+      });
+    }
+    if (modalNextBtn) {
+      modalNextBtn.addEventListener("click", () => {
+        if (modalIndex < images.length - 1) {
+          modalIndex++;
+          modalImg.src = images[modalIndex];
+          modalImg.alt = description;
+          updateModalButtons();
+        }
+      });
+    }
 
     modalClose.addEventListener("click", () => {
       modal.classList.add("hidden");
@@ -185,7 +222,6 @@ async function showSpecimen(id) {
       document.getElementById("img-modal-desc").textContent = "";
     });
 
-    // Close modal on outside click
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         modal.classList.add("hidden");
