@@ -43,6 +43,7 @@ Papa.parse(metaCsvUrl, {
       ].filter(Boolean).join(", ");
 
       const title = spec["Specimen Title"]?.trim();
+      const description = spec["Description"]?.trim() || ""; // Get Description
 
       // Label: Title (or species if missing), then Catalog ID
       let labelMain = title ? title : (species ? species : "Specimen");
@@ -56,12 +57,11 @@ Papa.parse(metaCsvUrl, {
 
       const card = document.createElement("div");
       card.className = "gallery-card";
-      // Store searchable fields as data attributes for fast filtering
       card.dataset.search = `${idStr} ${searchTitle} ${speciesStr}`;
       card.innerHTML = `
         <a href="index.html#${id}">
-          <img src="${imageUrl}" alt="Specimen ${id}" />
-          <div class="caption">${label}</div>
+          <img src="${imageUrl}" alt="${description || labelMain}" />
+          <div class="caption">${label}${description ? `<div class="desc">${description}</div>` : ""}</div>
         </a>
       `;
       galleryGrid.appendChild(card);

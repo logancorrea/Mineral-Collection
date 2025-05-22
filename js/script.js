@@ -125,9 +125,9 @@ async function showSpecimen(id) {
     }
 
     const end = Math.min(currentSlide + visibleCount, images.length);
+    const description = spec["Description"]?.trim() || "";
     const shown = images.slice(currentSlide, end).map((name, idx) =>
-      // NEW (use the full URL as returned by getSpecimenImages)
-    `<img src="${name}" alt="Specimen image" class="specimen-img carousel-img" data-img="${name}" loading="lazy" style="cursor: pointer;" />`
+      `<img src="${name}" alt="${description}" class="specimen-img carousel-img" data-img="${name}" loading="lazy" style="cursor: pointer;" />`
     ).join("");
 
     const hasPrev = currentSlide > 0;
@@ -142,6 +142,7 @@ async function showSpecimen(id) {
       <div id="img-modal" class="img-modal hidden">
         <span class="img-modal-close" id="img-modal-close">&times;</span>
         <img class="img-modal-content" id="img-modal-img" />
+        <div id="img-modal-desc" class="img-modal-desc" style="color:#fff; text-align:center; margin-top:1em;"></div>
       </div>
     `;
 
@@ -173,12 +174,15 @@ async function showSpecimen(id) {
         modal.classList.remove("hidden");
         modalImg.src = img.src;
         modalImg.alt = img.alt;
+        // Show description in modal
+        document.getElementById("img-modal-desc").textContent = description;
       });
     });
 
     modalClose.addEventListener("click", () => {
       modal.classList.add("hidden");
       modalImg.src = "";
+      document.getElementById("img-modal-desc").textContent = "";
     });
 
     // Close modal on outside click
@@ -186,6 +190,7 @@ async function showSpecimen(id) {
       if (e.target === modal) {
         modal.classList.add("hidden");
         modalImg.src = "";
+        document.getElementById("img-modal-desc").textContent = "";
       }
     });
   }
