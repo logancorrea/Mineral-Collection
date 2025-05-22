@@ -184,6 +184,7 @@ async function showSpecimen(id) {
         modal.classList.remove("hidden");
         modalImg.src = img.src;
         modalImg.alt = img.alt;
+        // Update description for the current image
         document.getElementById("img-modal-desc").textContent = description;
         modalIndex = currentSlide + idx;
         updateModalButtons();
@@ -201,6 +202,8 @@ async function showSpecimen(id) {
           modalIndex--;
           modalImg.src = images[modalIndex];
           modalImg.alt = description;
+          // Update description for the new image
+          document.getElementById("img-modal-desc").textContent = description;
           updateModalButtons();
         }
       });
@@ -211,6 +214,8 @@ async function showSpecimen(id) {
           modalIndex++;
           modalImg.src = images[modalIndex];
           modalImg.alt = description;
+          // Update description for the new image
+          document.getElementById("img-modal-desc").textContent = description;
           updateModalButtons();
         }
       });
