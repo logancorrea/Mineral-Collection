@@ -1,20 +1,20 @@
 /* === Color Palette Variables === */
 :root {
-  --primary: #B2C9AD;
-  --header-bg: #537D5D;
-  --sidebar-bg: #B2C9AD;
-  --accent: #537D5D;
-  --accent-hover: #73946B;
-  --background: #D2D0A0;
-  --text: #5e481e;
-  --sidebar-text: #537D5D;
-  --sidebar-link-hover: #537D5D;
-  --sidebar-text-hover: #B2C9AD;
-  --link-hover-color: #73946B;
-  --picture-border: #537D5D;
-  --picture-hover: #73946B;
-  --links: #537D5D;
-  --main-title: #5e481e;
+  --primary: #fff;
+  --header-bg: #008397;
+  --sidebar-bg: #6cb5c1;
+  --accent: #000;
+  --accent-hover: #6cb5c1;
+  --background: #fff;
+  --text: #000;
+  --sidebar-text: #000;
+  --sidebar-link-hover: #6cb5c1;
+  --sidebar-text-hover: #008397;
+  --link-hover-color: #6cb5c1;
+  --picture-border: #008397;
+  --picture-hover: #6cb5c1;
+  --links: #008397;
+  --main-title: #000;
 }
 
 /* === Reset & Base === */
@@ -445,7 +445,7 @@ button#toggleGallery {
   top: 0; left: 0; right: 0; bottom: 0;
   background: url('../images/bg2.jpg') no-repeat center center fixed;
   background-size: cover;
-  opacity: 0.15;
+  opacity: 0.1; /* was 0.15, now more transparent */
   z-index: 0;
   pointer-events: none;
 }

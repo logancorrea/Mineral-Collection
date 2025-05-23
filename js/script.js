@@ -93,6 +93,96 @@ function renderSidebar() {
   if (search2) {
     search2.addEventListener("input", () => filterSpecimens(search2.value));
   }
+
+  // --- Render collection stats on home page ---
+  renderCollectionStats();
+}
+
+function renderCollectionStats() {
+  // Only show stats if no specimen is selected (no hash)
+  if (window.location.hash && window.location.hash.length > 1) return;
+
+  const specimens = Object.values(specimenMap);
+  const totalSpecimens = specimens.length;
+  const uniqueSpecies = new Set();
+  let totalImages = 0;
+
+  specimens.forEach(spec => {
+    // Count unique species
+    ["Species 1", "Species 2", "Species 3", "Species 4", "Species 5"].forEach(key => {
+      if (spec[key]) uniqueSpecies.add(spec[key].trim());
+    });
+    // Count images (estimate by Photos column or just 1 per specimen)
+    if (spec["Photos"] && !isNaN(spec["Photos"])) {
+      totalImages += parseInt(spec["Photos"]);
+    } else {
+      totalImages += 1;
+    }
+  });
+
+  content.innerHTML = `
+    <h2>Collection Stats</h2>
+    <ul style="font-size:1.2em;line-height:1.7;">
+      <li><strong>Total Specimens:</strong> ${totalSpecimens}</li>
+      <li><strong>Unique Species:</strong> ${uniqueSpecies.size}</li>
+      <li><strong>Total Images:</strong> ${totalImages}</li>
+    </ul>
+    <p style="color:#888;">Select a specimen from the sidebar to view details.</p>
+    <div id="stats-map" style="height:400px;margin-top:2em;border-radius:8px;overflow:hidden;"></div>
+  `;
+
+  // --- Add map with all specimen markers ---
+  setTimeout(() => {
+    if (typeof L === "undefined" || typeof L.markerClusterGroup === "undefined") return; // Leaflet or cluster not loaded
+
+    // Gather all valid specimens with coordinates
+    const points = [];
+    specimens.forEach(spec => {
+      const coordString = spec["Coordinates"];
+      if (coordString && coordString.includes(",")) {
+        const [lat, lng] = coordString.split(",").map(s => parseFloat(s));
+        if (!isNaN(lat) && !isNaN(lng)) {
+          points.push({
+            lat, lng,
+            id: spec["Catalog ID"],
+            title: spec["Specimen Title"] || "",
+            species: [
+              spec["Species 1"], spec["Species 2"], spec["Species 3"],
+              spec["Species 4"], spec["Species 5"]
+            ].filter(Boolean).join(", "),
+            locality: spec["Locality"] || ""
+          });
+        }
+      }
+    });
+
+    // Center map on average of points, fallback to [20,0]
+    let center = [20, 0];
+    if (points.length) {
+      const avgLat = points.reduce((s, p) => s + p.lat, 0) / points.length;
+      const avgLng = points.reduce((s, p) => s + p.lng, 0) / points.length;
+      center = [avgLat, avgLng];
+    }
+
+    const map = L.map("stats-map").setView(center, 2);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const cluster = L.markerClusterGroup({
+      spiderfyOnMaxZoom: true,
+      showCoverageOnHover: false,
+      maxClusterRadius: 40
+    });
+
+    points.forEach(sp => {
+      const marker = L.marker([sp.lat, sp.lng])
+        .bindPopup(`<a href="#${sp.id}">${sp.title || sp.species || "Specimen"} (Cat ID: ${sp.id})</a><br>${sp.locality}`);
+      cluster.addLayer(marker);
+    });
+
+    map.addLayer(cluster);
+  }, 0);
 }
 
 // === Main Viewer ===
@@ -365,3 +455,15 @@ function loadFromHash() {
 }
 
 window.addEventListener("hashchange", loadFromHash);
+
+// Home link functionality
+document.addEventListener("DOMContentLoaded", () => {
+  const homeLink = document.getElementById("home-link");
+  if (homeLink) {
+    homeLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.location.hash = "";
+      renderCollectionStats();
+    });
+  }
+});
