@@ -474,3 +474,22 @@ button#toggleGallery {
   font-family: 'Georgia', serif;
   text-align: center;
 }
+
+.link-preview-popup {
+  position: absolute;
+  z-index: 9999;
+  min-width: 0;
+  width: auto;
+  max-width: 90vw;
+  min-height: 0;
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  box-shadow: 0 4px 24px #0002;
+  display: none;
+  pointer-events: none;
+  overflow: visible;
+  font-size: 0.95em;
+  border-radius: 6px;
+  white-space: pre-line;
+}

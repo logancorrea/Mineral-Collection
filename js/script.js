@@ -467,3 +467,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// --- Link preview popup ---
+document.addEventListener("DOMContentLoaded", () => {
+  const preview = document.createElement("div");
+  preview.className = "link-preview-popup";
+  document.body.appendChild(preview);
+
+  document.body.addEventListener("mouseover", function(e) {
+    const a = e.target.closest('a[href^="http"]');
+    if (a && a.closest("#main-content")) {
+      const url = a.href;
+      preview.style.display = "block";
+      preview.style.left = (e.pageX + 20) + "px";
+      preview.style.top = (e.pageY - 40) + "px";
+      // Show favicon and full URL as a preview
+      const domain = url.replace(/^https?:\/\//, '').split('/')[0];
+      const favicon = `https://www.google.com/s2/favicons?domain=${domain}`;
+      preview.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="${favicon}" style="width:20px;height:20px;vertical-align:middle;border-radius:3px;" alt="favicon"/>
+          <span style="font-weight:600;word-break:break-all;">${url}</span>
+        </div>
+      `;
+    }
+  });
+
+  document.body.addEventListener("mousemove", function(e) {
+    if (preview.style.display === "block") {
+      preview.style.left = (e.pageX + 20) + "px";
+      preview.style.top = (e.pageY - 40) + "px";
+    }
+  });
+
+  document.body.addEventListener("mouseout", function(e) {
+    const a = e.target.closest('a[href^="http"]');
+    if (a && a.closest("#main-content")) {
+      preview.style.display = "none";
+      preview.innerHTML = "";
+    }
+  });
+});
