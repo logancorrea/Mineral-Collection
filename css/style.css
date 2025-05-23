@@ -548,6 +548,29 @@ button#toggleGallery {
   cursor: pointer;
 }
 
+/* === Gallery Modal Styles === */
+.img-modal {
+  display: flex;
+  position: fixed;
+  z-index: 10000;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  align-items: center;
+  justify-content: center;
+}
+
+.img-modal.hidden {
+  display: none !important;
+}
+
+.img-modal-content {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  box-shadow: 0 0 24px #000a;
+  background: #fff;
+}
+
 /* --- Caption Styles --- */
 .gallery-card .caption {
   position: absolute;

@@ -60,8 +60,8 @@ Papa.parse(metaCsvUrl, {
       card.dataset.search = `${idStr} ${searchTitle} ${speciesStr}`;
       card.dataset.id = id;
       card.innerHTML = `
+        <img src="${imageUrl}" alt="${description || labelMain}" />
         <a href="index.html#${id}">
-          <img src="${imageUrl}" alt="${description || labelMain}" />
           <div class="caption">
             <div style="font-weight:600;">${labelMain}</div>
             <div style="font-size:0.97em;">Catalog ID: ${id}</div>
@@ -70,6 +70,21 @@ Papa.parse(metaCsvUrl, {
         </a>
       `;
       galleryGrid.appendChild(card);
+
+      const img = card.querySelector("img");
+      img.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const modal = document.getElementById("gallery-modal");
+        const modalImg = document.getElementById("gallery-modal-img");
+        const modalDesc = document.getElementById("gallery-modal-desc");
+        modal.classList.remove("hidden");
+        modalImg.src = img.src;
+        modalImg.alt = img.alt;
+        // Optional: show caption/description in modal
+        const caption = card.querySelector(".caption");
+        modalDesc.textContent = caption ? caption.innerText : "";
+      });
     }
 
     // --- Add search functionality ---
