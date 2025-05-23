@@ -15,6 +15,7 @@
   --picture-hover: #6cb5c1;
   --links: #008397;
   --main-title: #000;
+  --gallery-background: #000;
 }
 
 /* === Reset & Base === */
@@ -243,6 +244,7 @@ body {
 }
 
 .gallery-card {
+  position: relative;
   border: 1px solid var(--primary);
   border-radius: 8px;
   overflow: hidden;
@@ -256,30 +258,29 @@ body {
 /* --- Gallery Card Overlay Text --- */
 .gallery-card .caption {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: 0; right: 0; bottom: 0;
   padding: 12px 8px 10px 8px;
-  background: color-mix(in srgb, var(--background) 85%, transparent);
-  /* fallback for browsers without color-mix: */
-  background: rgba(255,255,255,0.75);
-  color: #000 !important;
+  background: rgba(0,0,0,0.55); /* fallback for older browsers */
+  background: color-mix(in srgb, var(--gallery-background) 40%, transparent);
+  color: var(--background);
   font-size: 1rem;
-  text-align: center;
+  text-align: left;
   z-index: 2;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   box-sizing: border-box;
-  /* Optional: add a subtle shadow for readability */
   text-shadow: 0 1px 6px #0003;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
 }
 
-.gallery-card .caption .cat-id {
-  color: #000 !important;
-  font-weight: bold;
+.gallery-card:hover .caption,
+.gallery-card:focus-within .caption {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-/* Make sure the image fills the card and is behind the caption */
 .gallery-card img {
   display: block;
   height: 300px;
@@ -288,8 +289,6 @@ body {
   object-fit: cover;
   z-index: 1;
   image-rendering: crisp-edges;
-  image-rendering: -webkit-optimize-contrast; /* For Safari */
-  image-rendering: pixelated; /* For some browsers, especially for upscaled images */
   border: 3px solid var(--picture-border); /* Add this line for border */
   border-radius: 8px; /* Optional: match card rounding */
   box-sizing: border-box;
@@ -308,7 +307,7 @@ body {
 .gallery-card .caption {
   padding: 10px;
   font-size: 0.95rem;
-  color: var(--text);
+
 }
 
 /* === Carousel === */
@@ -489,9 +488,10 @@ button#toggleGallery {
 }
 
 /* Make main-content, gallery-content, and map backgrounds transparent ONLY on their respective pages */
-.home #main-content,
 .scroll-page #gallery-content,
-.map-page #map {
+.home #gallery-content,
+.map-page #map,
+.home #main-content {
   background: transparent !important;
 }
 

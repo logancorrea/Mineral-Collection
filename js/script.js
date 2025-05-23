@@ -508,3 +508,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.location.hash) loadFromHash();
+});
