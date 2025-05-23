@@ -232,26 +232,28 @@ body {
 
 /* === Gallery Grid === */
 #gallery-content {
-  padding: 2rem;
-  background: var(--background);
+  padding-left: 8vw;
+  padding-right: 8vw;
+  padding-top: 0;
   padding-bottom: 48px;
+  background: var(--gallery-background);
 }
 
 /* Gallery grid: images touch, no gaps, crisp edges */
 #gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(2, 1fr); /* Only 2 images per row */
   grid-auto-rows: 400px;
   gap: 0;
-  width: 100vw;
-  max-width: 100vw;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
 }
 
 .gallery-card {
   padding: 0;
   margin: 0;
-  border: 1px solid var(--text);
+  border: none;
   border-radius: 0;
   box-shadow: none;
   background: none !important; /* Ensure no background */
@@ -489,15 +491,11 @@ button#toggleGallery {
 
 /* Make main-content, gallery-content, and map backgrounds transparent ONLY on their respective pages */
 .scroll-page #gallery-content,
-.home #gallery-content,
+.home #gallery-content {
+  background: var(--gallery-background) !important;
+}
 .map-page #map,
 .home #main-content {
-  background: transparent !important;
-}
-
-/* Make carousel/gallery backgrounds transparent on home and gallery pages */
-.home #gallery-content,
-.scroll-page #gallery-content {
   background: transparent !important;
 }
 
@@ -528,18 +526,18 @@ button#toggleGallery {
 /* === Custom Styles for Specimen Grid Cards === */
 #gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(2, 1fr); /* Only 2 images per row */
   grid-auto-rows: 400px;
   gap: 0;
-  width: 100vw;
-  max-width: 100vw;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
 }
 
 .gallery-card {
   padding: 0;
   margin: 0;
-  border: 1px solid var(--text);
+  border: none;
   border-radius: 0;
   box-shadow: none;
   background: none !important; /* Ensure no background */
