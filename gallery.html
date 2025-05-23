@@ -37,5 +37,20 @@
   </div>
 
   <script src="js/gallery.js"></script>
+  <script>
+    // Assuming `data` is the array of specimen objects
+    data.forEach(specimen => {
+      const { id, imageUrl, description, labelMain } = specimen;
+      const card = document.createElement('div');
+      card.className = 'gallery-card';
+      card.innerHTML = `
+        <a href="index.html#${id}">
+          <img src="${imageUrl}" alt="${description || labelMain}" />
+          <div class="caption"><span class="cat-id">#${id}</span> ${label}</div>
+        </a>
+      `;
+      document.getElementById('gallery-grid').appendChild(card);
+    });
+  </script>
 </body>
 </html>
