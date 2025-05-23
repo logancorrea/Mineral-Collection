@@ -273,11 +273,18 @@ async function showSpecimen(id) {
     <div class="section">
       <p><strong>Catalog ID:</strong> ${id}</p>
       <p><strong>Mindat ID:</strong> ${spec["MinID"] || "—"}</p>
-      <p><strong>Species:</strong> ${species || "—"}</p>
-            ${(speciesNames.length && speciesInfoLinks.length) ? `<p><strong>Species Info:</strong> ${speciesNames.map((name, i) => {
-        const url = speciesInfoLinks[i] || speciesInfoLinks[0];
-        return `<a href="${url}" target="_blank">${name}</a>`;
-      }).join(", ")}</p>` : ""}
+      ${
+        speciesInfoLinks.length
+          ? `<p><strong>Species:</strong> ${
+              speciesNames.length
+                ? speciesNames.map((name, i) => {
+                    const url = speciesInfoLinks[i] || speciesInfoLinks[0];
+                    return `<a href="${url}" target="_blank">${name}</a>`;
+                  }).join(", ")
+                : speciesInfoLinks.map(url => `<a href="${url}" target="_blank">${url}</a>`).join(", ")
+            }</p>`
+          : ""
+      }
       <p><strong>Locality:</strong> ${spec["Locality"] || "—"}</p>
       <p><strong>Mindat Locality:</strong> ${mindatLocHtml}</p>
       <p><strong>Year Acquired:</strong> ${spec["Year of Acquisition"] || "—"}</p>
