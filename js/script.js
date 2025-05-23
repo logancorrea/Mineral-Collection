@@ -105,11 +105,28 @@ async function showSpecimen(id) {
     spec["Species 4"], spec["Species 5"]
   ].filter(Boolean).join(", ");
 
-  const mindatLinks = (spec["Species Info"] || "")
+  const speciesNames = [
+    spec["Species 1"], spec["Species 2"], spec["Species 3"],
+    spec["Species 4"], spec["Species 5"]
+  ].filter(Boolean);
+
+  const speciesInfoLinks = (spec["Species Info"] || "")
     .split(/\s+/)
-    .filter(url => url.startsWith("http"))
-    .map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`)
-    .join("");
+    .filter(url => url.startsWith("http"));
+
+  console.log("speciesNames", speciesNames, "speciesInfoLinks", speciesInfoLinks);
+
+  let mindatLinks = "";
+  if (speciesNames.length && speciesInfoLinks.length) {
+    mindatLinks = speciesNames.map((name, i) => {
+      const url = speciesInfoLinks[i] || speciesInfoLinks[0]; // fallback to first if not enough links
+      return `<li><a href="${url}" target="_blank">${name}</a></li>`;
+    }).join("");
+  } else if (speciesInfoLinks.length) {
+    mindatLinks = speciesInfoLinks.map(url =>
+      `<li><a href="${url}" target="_blank">${url}</a></li>`
+    ).join("");
+  }
 
   // Use images from folder, not Google Sheet
   const fileNames = await getSpecimenImages(id);
@@ -257,7 +274,10 @@ async function showSpecimen(id) {
       <p><strong>Catalog ID:</strong> ${id}</p>
       <p><strong>Mindat ID:</strong> ${spec["MinID"] || "—"}</p>
       <p><strong>Species:</strong> ${species || "—"}</p>
-      ${mindatLinks ? `<p><strong>Mindat Links:</strong><ul>${mindatLinks}</ul></p>` : ""}
+            ${(speciesNames.length && speciesInfoLinks.length) ? `<p><strong>Species Info:</strong> ${speciesNames.map((name, i) => {
+        const url = speciesInfoLinks[i] || speciesInfoLinks[0];
+        return `<a href="${url}" target="_blank">${name}</a>`;
+      }).join(", ")}</p>` : ""}
       <p><strong>Locality:</strong> ${spec["Locality"] || "—"}</p>
       <p><strong>Mindat Locality:</strong> ${mindatLocHtml}</p>
       <p><strong>Year Acquired:</strong> ${spec["Year of Acquisition"] || "—"}</p>
