@@ -329,19 +329,16 @@ body {
 /* --- Modal --- */
 .img-modal {
   display: flex;
+  position: fixed;
+  z-index: 10000;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
   align-items: center;
   justify-content: center;
-  position: fixed;
-  z-index: 2000;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.8);
 }
 
 .img-modal.hidden {
-  display: none;
+  display: none !important;
 }
 
 .img-modal-content {

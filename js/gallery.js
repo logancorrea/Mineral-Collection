@@ -58,6 +58,7 @@ Papa.parse(metaCsvUrl, {
       const card = document.createElement("div");
       card.className = "gallery-card";
       card.dataset.search = `${idStr} ${searchTitle} ${speciesStr}`;
+      card.dataset.id = id;
       card.innerHTML = `
         <a href="index.html#${id}">
           <img src="${imageUrl}" alt="${description || labelMain}" />
@@ -75,6 +76,78 @@ Papa.parse(metaCsvUrl, {
         const searchText = card.dataset.search;
         card.style.display = searchText.includes(q) ? "" : "none";
       });
+    });
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const galleryModal = document.getElementById("gallery-modal");
+  const galleryModalImg = document.getElementById("gallery-modal-img");
+  const galleryModalClose = document.getElementById("gallery-modal-close");
+  const galleryModalPrevBtn = document.getElementById("galleryModalPrevBtn");
+  const galleryModalNextBtn = document.getElementById("galleryModalNextBtn");
+  const galleryModalDesc = document.getElementById("gallery-modal-desc");
+
+  let galleryModalImages = [];
+  let galleryModalIndex = 0;
+
+  async function getSpecimenImages(id, maxImages = 5) {
+    const urls = [];
+    const extensions = ["jpg", "JPG", "jpeg", "png", "webp"];
+    for (let i = 1; i <= maxImages; i++) {
+      const suffix = i === 1 ? '' : `-${i}`;
+      let found = false;
+      for (const ext of extensions) {
+        const url = `images/${id}${suffix}.${ext}`;
+        try {
+          const res = await fetch(url, { method: "HEAD" });
+          if (res.ok) {
+            urls.push(url);
+            found = true;
+            break;
+          }
+        } catch {}
+      }
+      if (!found) break;
+    }
+    return urls;
+  }
+
+  function showGalleryModalImage() {
+    galleryModalImg.src = galleryModalImages[galleryModalIndex];
+    galleryModalDesc.textContent = `Image ${galleryModalIndex + 1} of ${galleryModalImages.length}`;
+    galleryModalPrevBtn.disabled = galleryModalIndex === 0;
+    galleryModalNextBtn.disabled = galleryModalIndex === galleryModalImages.length - 1;
+  }
+
+  if (galleryModalPrevBtn) {
+    galleryModalPrevBtn.addEventListener("click", () => {
+      if (galleryModalIndex > 0) {
+        galleryModalIndex--;
+        showGalleryModalImage();
+      }
+    });
+  }
+  if (galleryModalNextBtn) {
+    galleryModalNextBtn.addEventListener("click", () => {
+      if (galleryModalIndex < galleryModalImages.length - 1) {
+        galleryModalIndex++;
+        showGalleryModalImage();
+      }
+    });
+  }
+  if (galleryModalClose) {
+    galleryModalClose.addEventListener("click", () => {
+      galleryModal.classList.add("hidden");
+      galleryModalImg.src = "";
+    });
+  }
+  if (galleryModal) {
+    galleryModal.addEventListener("click", (e) => {
+      if (e.target === galleryModal) {
+        galleryModal.classList.add("hidden");
+        galleryModalImg.src = "";
+      }
     });
   }
 });
