@@ -260,8 +260,10 @@ async function showSpecimen(id) {
 
 
   const mindatLocUrl = spec["Mindat Locality"];
-  const mindatLocHtml = mindatLocUrl
-    ? `<a href="${mindatLocUrl}" target="_blank">${mindatLocUrl}</a>` : "—";
+  const localityText = spec["Locality"] || "—";
+  const localityHtml = mindatLocUrl
+    ? `<a href="${mindatLocUrl}" target="_blank">${localityText}</a>`
+    : localityText;
 
   content.innerHTML = `
     <h2>${spec["Specimen Title"] || species || `Catalog ${id}`}</h2>
@@ -285,8 +287,7 @@ async function showSpecimen(id) {
             }</p>`
           : ""
       }
-      <p><strong>Locality:</strong> ${spec["Locality"] || "—"}</p>
-      <p><strong>Mindat Locality:</strong> ${mindatLocHtml}</p>
+      <p><strong>Locality:</strong> ${localityHtml}</p>
       <p><strong>Year Acquired:</strong> ${spec["Year of Acquisition"] || "—"}</p>
       <p><strong>Dimensions:</strong> ${spec["Dimensions"] || "—"}</p>
       <p><strong>Source:</strong> ${spec["Specimen Source"] || "—"}</p>
