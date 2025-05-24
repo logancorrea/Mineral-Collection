@@ -242,8 +242,7 @@ body {
 #gallery-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Only 2 images per row */
-  grid-auto-rows: 400px;
-  gap: 0;
+  gap: 2em; /* or your preferred spacing */
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
@@ -270,6 +269,7 @@ body {
   height: auto;
   object-fit: contain;
   object-position: center;
+  display: block;
 }
 
 /* --- Gallery Card Overlay Text --- */
@@ -368,12 +368,37 @@ body {
   display: none !important;
 }
 
-.img-modal-content {
-  max-width: 90vw;
+.img-modal > div {
+  /* The flex row container */
+  width: 100%;
+  max-width: 100vw;
   max-height: 90vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.img-modal-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  max-height: 90vh;
+  /* Remove overflow-y: auto; */
+  width: 100%;
+  max-width: 90vw;
+  padding-bottom: 1em;
+}
+
+.img-modal-content {
+  max-width: 98vw;
+  /* Let the image shrink to fit available space minus caption height */
+  max-height: 70vh; /* Lower this if your captions are sometimes tall */
   border-radius: 8px;
   box-shadow: 0 0 24px #000a;
   background: #fff;
+  display: block;
 }
 
 .img-modal-close {
@@ -389,179 +414,6 @@ body {
   background: transparent;
   border: none;
   line-height: 1;
-}
-
-/* --- Utility --- */
-a {
-  color: var(--primary);
-  transition: color 0.2s, background 0.2s;
-  text-decoration: none;
-}
-
-a:hover,
-a:focus {
-  color: var(--picture-border);
-}
-
-/* Map page styles */
-#map-search-bar {
-  padding: .75rem;
-  background: var(--sidebar-bg);
-  border-bottom: 1px solid var(--primary);
-}
-#mapSearch {
-  width: 100%;
-  max-width: 400px;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid var(--primary);
-  border-radius: 4px;
-  background: #fff;
-  color: var(--text);
-}
-#map {
-  height: calc(100vh - 56px - 66px);
-  width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-  margin: 0 auto;
-  display: block;
-}
-
-/* Make the map on specimen pages smaller */
-#main-content #map {
-  height: 320px;
-  max-width: 500px;
-  margin: 2rem auto 0 auto;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-  width: 100%;
-  display: block;
-  border: 3px solid var(--picture-hover); /* changed from --picture-border to --picture-hover */
-  /* left align the map */
-  margin-left: 0;
-}
-
-/* === Misc === */
-.hidden {
-  display: none;
-}
-
-button#toggleGallery {
-  margin: 1rem 0;
-  padding: 0.5rem 1rem;
-}
-
-
-
-/* Only show background image on homepage, gallery, and map page */
-.home,
-.scroll-page,
-.map-page {
-  background: var(--background);
-}
-
-.home::before,
-.scroll-page::before,
-.map-page::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: url('../images/bg2.jpg') no-repeat center center fixed;
-  background-size: cover;
-  opacity: 0.1; /* was 0.15, now more transparent */
-  z-index: 0;
-  pointer-events: none;
-}
-
-.home > *,
-.scroll-page > *,
-.map-page > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Make main-content, gallery-content, and map backgrounds transparent ONLY on their respective pages */
-.scroll-page #gallery-content,
-.home #gallery-content {
-  /* background: var(--gallery-background); */
-  background: transparent !important;
-}
-.map-page #map,
-.home #main-content {
-  background: transparent !important;
-}
-
-.scroll-page #gallery-content h2 {
-  font-family: 'Georgia', serif;
-  text-align: center;
-}
-
-.link-preview-popup {
-  position: absolute;
-  z-index: 9999;
-  min-width: 0;
-  width: auto;
-  max-width: 90vw;
-  min-height: 0;
-  padding: 4px 10px;
-  border: 1px solid #ccc;
-  background: #fff;
-  box-shadow: 0 4px 24px #0002;
-  display: none;
-  pointer-events: none;
-  overflow: visible;
-  font-size: 0.95em;
-  border-radius: 6px;
-  white-space: pre-line;
-}
-
-/* === Custom Styles for Specimen Grid Cards === */
-#gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Only 2 images per row */
-  grid-auto-rows: 450px;
-  gap: 0;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-.gallery-card {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  border: 1px solid var(--gallery-background); /* Reduced from 3px to 1px */
-  border-radius: 0;
-  box-shadow: none;
-  background: none !important;
-  overflow: hidden;
-  width: 100%;
-  position: relative;
-  cursor: pointer;
-}
-
-/* === Gallery Modal Styles === */
-.img-modal {
-  display: flex;
-  position: fixed;
-  z-index: 10000;
-  left: 0; top: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.85);
-  align-items: center;
-  justify-content: center;
-}
-
-.img-modal.hidden {
-  display: none !important;
-}
-
-.img-modal-content {
-  max-width: 90vw;
-  max-height: 90vh;
-  border-radius: 8px;
-  box-shadow: 0 0 24px #000a;
-  background: #fff;
 }
 
 /* --- Caption Styles --- */
@@ -591,22 +443,23 @@ button#toggleGallery {
 
 /* --- Gallery Modal Caption Styles --- */
 .img-modal-desc {
-  position: static;              /* Remove absolute positioning */
-  left: unset;
-  right: unset;
-  bottom: unset;
-  background: rgba(0,0,0,0.6);   /* semi-transparent black */
-  color: #fff;                   /* white text */
+  position: static;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
   font-size: 1rem;
-  text-align: left;              /* Left align text */
+  text-align: left;
   padding: 12px 8px 10px 8px;
-  border-radius: 0 0 8px 8px;    /* Rounded bottom corners if desired */
+  border-radius: 0 0 8px 8px;
   box-sizing: border-box;
   text-shadow: 0 1px 6px #0003;
   width: 100%;
   margin: 0;
   z-index: 2;
   pointer-events: auto;
+  max-width: 90vw;
+  overflow-wrap: break-word;
+  /* Optional: set min-height if you want a minimum caption area */
+  /* min-height: 48px; */
 }
 
 /* --- Grid Span for Featured Cards --- */

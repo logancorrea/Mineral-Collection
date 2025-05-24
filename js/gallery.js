@@ -66,7 +66,7 @@ Papa.parse(metaCsvUrl, {
             <div style="font-weight:600;">${labelMain}</div>
             <div style="font-size:0.97em;">Catalog ID: ${id}</div>
             <div style="font-size:0.97em;">Species: ${species || "—"}</div>
-            <div style="font-size:0.96em; margin-top:2px;">${description || ""}</div>
+            <div class="desc" style="font-size:0.96em; margin-top:2px;">${description}</div>
           </div>
         </a>
       `;
@@ -84,7 +84,14 @@ Papa.parse(metaCsvUrl, {
         modalImg.alt = img.alt;
         // Optional: show caption/description in modal
         const caption = card.querySelector(".caption");
-        modalDesc.innerHTML = caption ? caption.innerHTML : "";
+        if (caption) {
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = caption.innerHTML;
+          // Remove the description div (now with class "desc")
+          const descDiv = tempDiv.querySelector('.desc');
+          if (descDiv) descDiv.remove();
+          modalDesc.innerHTML = tempDiv.innerHTML;
+        }
       });
     }
 
