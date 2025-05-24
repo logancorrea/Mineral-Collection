@@ -363,6 +363,45 @@ async function showSpecimen(id) {
       zoom = 1;
       modalImg.style.transform = 'scale(1)';
     });
+
+    // --- Drag-to-pan logic for zoomed modal image ---
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let lastX = 0, lastY = 0;
+
+    modalImg.style.cursor = "grab";
+
+    modalImg.addEventListener('mousedown', function(e) {
+      if (zoom <= 1) return; // Only allow drag when zoomed in
+      isDragging = true;
+      startX = e.clientX - lastX;
+      startY = e.clientY - lastY;
+      modalImg.style.cursor = "grabbing";
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      lastX = e.clientX - startX;
+      lastY = e.clientY - startY;
+      modalImg.style.transform = `scale(${zoom}) translate(${lastX / zoom}px, ${lastY / zoom}px)`;
+    });
+
+    document.addEventListener('mouseup', function() {
+      if (isDragging) {
+        isDragging = false;
+        modalImg.style.cursor = "grab";
+      }
+    });
+
+    // Reset pan on zoom reset/close
+    modalClose.addEventListener('click', () => {
+      zoom = 1;
+      lastX = 0;
+      lastY = 0;
+      modalImg.style.transform = 'scale(1)';
+      modalImg.style.cursor = "grab";
+    });
   }
 
   const renderImages = () => {
