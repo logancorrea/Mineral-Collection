@@ -65,7 +65,8 @@ Papa.parse(metaCsvUrl, {
           <div class="caption">
             <div style="font-weight:600;">${labelMain}</div>
             <div style="font-size:0.97em;">Catalog ID: ${id}</div>
-            <div style="font-size:0.96em; margin-top:2px;">${description}</div>
+            <div style="font-size:0.97em;">Species: ${species || "—"}</div>
+            <div style="font-size:0.96em; margin-top:2px;">${description || ""}</div>
           </div>
         </a>
       `;
@@ -83,7 +84,7 @@ Papa.parse(metaCsvUrl, {
         modalImg.alt = img.alt;
         // Optional: show caption/description in modal
         const caption = card.querySelector(".caption");
-        modalDesc.textContent = caption ? caption.innerText : "";
+        modalDesc.innerHTML = caption ? caption.innerHTML : "";
       });
     }
 

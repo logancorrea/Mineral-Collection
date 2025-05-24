@@ -247,7 +247,7 @@ body {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  background: transparent !important; /* Ensure grid is transparent */
+  background: transparent !important;
 }
 
 .gallery-card {
@@ -260,26 +260,16 @@ body {
   background: none !important; /* Ensure cards are transparent */
   overflow: hidden;
   width: 100%;
-  height: 100%;
   position: relative;
   cursor: pointer;
+  height: auto;
 }
 
 .gallery-card img {
-  box-sizing: border-box;
   width: 100%;
-  height: 100%;
-  display: block;
-  padding: 0;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  outline: none;
-  background: #000;
-  user-drag: none;
-  user-select: none;
-  object-fit: contain;      /* <-- Change from cover to contain */
-  object-position: center;/* <-- Optional: centers the crop */
+  height: auto;
+  object-fit: contain;
+  object-position: center;
 }
 
 /* --- Gallery Card Overlay Text --- */
@@ -530,7 +520,7 @@ button#toggleGallery {
 #gallery-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Only 2 images per row */
-  grid-auto-rows: 400px;
+  grid-auto-rows: 450px;
   gap: 0;
   width: 100%;
   max-width: 100%;
@@ -547,7 +537,6 @@ button#toggleGallery {
   background: none !important;
   overflow: hidden;
   width: 100%;
-  height: 100%;
   position: relative;
   cursor: pointer;
 }
@@ -602,22 +591,22 @@ button#toggleGallery {
 
 /* --- Gallery Modal Caption Styles --- */
 .img-modal-desc {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: color-mix(in srgb, var(--gallery-background) 40%, transparent);
-  color: var(--background);
+  position: static;              /* Remove absolute positioning */
+  left: unset;
+  right: unset;
+  bottom: unset;
+  background: rgba(0,0,0,0.6);   /* semi-transparent black */
+  color: #fff;                   /* white text */
   font-size: 1rem;
-  text-align: left;
+  text-align: left;              /* Left align text */
   padding: 12px 8px 10px 8px;
-  border-radius: 0;
+  border-radius: 0 0 8px 8px;    /* Rounded bottom corners if desired */
   box-sizing: border-box;
   text-shadow: 0 1px 6px #0003;
   width: 100%;
   margin: 0;
   z-index: 2;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 /* --- Grid Span for Featured Cards --- */
