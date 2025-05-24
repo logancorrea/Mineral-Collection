@@ -322,6 +322,8 @@ body {
 }
 
 .carousel-btn {
+  position: relative;
+  z-index: 20; /* Higher than image and caption */
   background: var(--picture-border);
   color: #fff;
   border: none;
@@ -331,6 +333,7 @@ body {
   font-size: 1.5em;
   cursor: pointer;
   transition: background 0.2s;
+  box-shadow: 0 2px 8px #0005;
 }
 
 .carousel-btn:disabled {
@@ -390,6 +393,7 @@ body {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  position: relative; /* Ensure stacking context for z-index */
 }
 
 .img-modal-col {
@@ -476,4 +480,45 @@ body {
   width: 100%;
   height: 80vh;
   min-height: 400px;
+}
+
+/* --- Image Modal Navigator --- */
+.img-modal-navigator {
+  position: absolute;
+  right: 24px;
+  /* Adjust bottom to be above the caption */
+  bottom: 110px; /* Increase this value if your caption is taller */
+  z-index: 20;
+  width: 120px;
+  height: 90px;
+  background: rgba(0,0,0,0.7);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0008;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.img-modal-navigator-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.img-modal-navigator img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+}
+
+.img-modal-navigator-box {
+  position: absolute;
+  border: 2px solid red;
+  box-sizing: border-box;
+  pointer-events: none;
+  border-radius: 2px;
+  background: rgba(255,0,0,0.08);
 }

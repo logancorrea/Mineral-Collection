@@ -249,9 +249,16 @@ async function showSpecimen(id) {
       <div id="img-modal" class="img-modal hidden">
         <div style="display:flex; flex-direction:row; align-items:center; justify-content:center;">
           <button class="carousel-btn" id="modalPrevBtn" style="margin-right:1em;">‹</button>
-          <div style="display:flex; flex-direction:column; align-items:center; position:relative;">
+          <div class="img-modal-col" style="display:flex; flex-direction:column; align-items:center; position:relative;">
             <span class="img-modal-close" id="img-modal-close" style="position:absolute; left:0; top:0; font-size:2.5em; color:#fff; cursor:pointer; z-index:10; padding:0 16px;">&times;</span>
             <img class="img-modal-content" id="img-modal-img" />
+            <!-- Move navigator here -->
+            <div class="img-modal-navigator" id="img-modal-navigator" style="display:none;">
+              <div class="img-modal-navigator-img-wrap">
+                <img id="img-modal-navigator-img" src="" alt="Navigator" />
+                <div id="img-modal-navigator-box" class="img-modal-navigator-box"></div>
+              </div>
+            </div>
             <div id="img-modal-desc" class="img-modal-desc" style="color:#fff; text-align:center; margin-top:1em; max-width:90vw;"></div>
           </div>
           <button class="carousel-btn" id="modalNextBtn" style="margin-left:1em;">›</button>
@@ -283,6 +290,9 @@ async function showSpecimen(id) {
     const modalClose = document.getElementById("img-modal-close");
     const modalPrevBtn = document.getElementById("modalPrevBtn");
     const modalNextBtn = document.getElementById("modalNextBtn");
+    const navigator = document.getElementById('img-modal-navigator');
+    const navigatorImg = document.getElementById('img-modal-navigator-img');
+    const navigatorBox = document.getElementById('img-modal-navigator-box');
 
     let modalIndex = 0;
 
@@ -309,9 +319,15 @@ async function showSpecimen(id) {
           modalIndex--;
           modalImg.src = images[modalIndex];
           modalImg.alt = description;
-          // Update description for the new image
           document.getElementById("img-modal-desc").textContent = description;
           updateModalButtons();
+          // Reset zoom and pan
+          zoom = 1;
+          lastX = 0;
+          lastY = 0;
+          modalImg.style.transform = 'scale(1)';
+          modalImg.style.cursor = "grab";
+          updateNavigator(zoom, lastX, lastY);
         }
       });
     }
@@ -321,9 +337,15 @@ async function showSpecimen(id) {
           modalIndex++;
           modalImg.src = images[modalIndex];
           modalImg.alt = description;
-          // Update description for the new image
           document.getElementById("img-modal-desc").textContent = description;
           updateModalButtons();
+          // Reset zoom and pan
+          zoom = 1;
+          lastX = 0;
+          lastY = 0;
+          modalImg.style.transform = 'scale(1)';
+          modalImg.style.cursor = "grab";
+          updateNavigator(zoom, lastX, lastY);
         }
       });
     }
@@ -357,6 +379,7 @@ async function showSpecimen(id) {
       }
       modalImg.style.transform = `scale(${zoom})`;
       modalImg.style.transition = 'transform 0.1s';
+      updateNavigator(zoom, lastX, lastY); // Update navigator on zoom
     });
 
     modalClose.addEventListener('click', () => {
@@ -385,6 +408,7 @@ async function showSpecimen(id) {
       lastX = e.clientX - startX;
       lastY = e.clientY - startY;
       modalImg.style.transform = `scale(${zoom}) translate(${lastX / zoom}px, ${lastY / zoom}px)`;
+      updateNavigator(zoom, lastX, lastY); // Update navigator on drag
     });
 
     document.addEventListener('mouseup', function() {
@@ -401,6 +425,51 @@ async function showSpecimen(id) {
       lastY = 0;
       modalImg.style.transform = 'scale(1)';
       modalImg.style.cursor = "grab";
+    });
+
+    // Show navigator when zoomed in
+    function updateNavigator(zoom, lastX, lastY) {
+      if (zoom <= 1) {
+        navigator.style.display = 'none';
+        return;
+      }
+      navigator.style.display = 'flex';
+      navigatorImg.src = modalImg.src;
+
+      // Get modal image and container sizes
+      const imgRect = modalImg.getBoundingClientRect();
+      const modalRect = modalImg.closest('.img-modal-col').getBoundingClientRect();
+
+      // Navigator sizes
+      const navW = navigatorImg.offsetWidth;
+      const navH = navigatorImg.offsetHeight;
+
+      // Calculate visible area as a fraction of the zoomed image
+      const scale = zoom;
+      const viewW = modalRect.width / (imgRect.width * scale);
+      const viewH = modalRect.height / (imgRect.height * scale);
+
+      // Calculate box position (centered panning)
+      const centerX = 0.5 - (lastX / (imgRect.width * scale));
+      const centerY = 0.5 - (lastY / (imgRect.height * scale));
+      const boxLeft = (centerX - viewW / 2) * navW;
+      const boxTop = (centerY - viewH / 2) * navH;
+      const boxWidth = viewW * navW;
+      const boxHeight = viewH * navH;
+
+      navigatorBox.style.left = `${boxLeft}px`;
+      navigatorBox.style.top = `${boxTop}px`;
+      navigatorBox.style.width = `${boxWidth}px`;
+      navigatorBox.style.height = `${boxHeight}px`;
+    }
+
+    // Call updateNavigator(zoom, lastX, lastY) whenever zoom or pan changes
+    // Example (inside your wheel and drag handlers):
+    // updateNavigator(zoom, lastX, lastY);
+
+    // Hide navigator on modal close
+    modalClose.addEventListener('click', () => {
+      navigator.style.display = 'none';
     });
   }
 
