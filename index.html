@@ -44,5 +44,34 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script src="js/script.js"></script>
+  <script>
+    // Zoom modal image on scroll
+    const modalImg = document.getElementById('img-modal-img');
+    let zoom = 1;
+    const ZOOM_STEP = 0.1;
+    const ZOOM_MIN = 0.2;
+    const ZOOM_MAX = 5;
+
+    if (modalImg) {
+      modalImg.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (e.deltaY < 0) {
+          // Zoom in
+          zoom = Math.min(zoom + ZOOM_STEP, ZOOM_MAX);
+        } else {
+          // Zoom out
+          zoom = Math.max(zoom - ZOOM_STEP, ZOOM_MIN);
+        }
+        modalImg.style.transform = `scale(${zoom})`;
+        modalImg.style.transition = 'transform 0.1s';
+      });
+
+      // Optional: Reset zoom when modal closes or image changes
+      document.getElementById('img-modal-close').addEventListener('click', () => {
+        zoom = 1;
+        modalImg.style.transform = 'scale(1)';
+      });
+    }
+  </script>
 </body>
 </html>

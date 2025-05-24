@@ -341,6 +341,28 @@ async function showSpecimen(id) {
         document.getElementById("img-modal-desc").textContent = "";
       }
     });
+
+    // --- Image zooming logic ---
+    let zoom = 1;
+    const ZOOM_STEP = 0.1;
+    const ZOOM_MIN = 0.2;
+    const ZOOM_MAX = 5;
+
+    modalImg.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      if (e.deltaY < 0) {
+        zoom = Math.min(zoom + ZOOM_STEP, ZOOM_MAX);
+      } else {
+        zoom = Math.max(zoom - ZOOM_STEP, ZOOM_MIN);
+      }
+      modalImg.style.transform = `scale(${zoom})`;
+      modalImg.style.transition = 'transform 0.1s';
+    });
+
+    modalClose.addEventListener('click', () => {
+      zoom = 1;
+      modalImg.style.transform = 'scale(1)';
+    });
   }
 
   const renderImages = () => {

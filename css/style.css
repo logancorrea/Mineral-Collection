@@ -416,6 +416,9 @@ body {
   border-radius: 0;
   box-shadow: none;
   padding: 0;
+  transition: transform 0.1s;
+  /* Optionally: */
+  will-change: transform;
 }
 
 /* Modal caption overlays bottom of image and matches image width */
