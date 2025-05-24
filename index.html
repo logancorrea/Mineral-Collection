@@ -27,6 +27,17 @@
     <div id="sidebar"></div>
     <div id="main-content"><p>Select a specimen</p></div>
   </div>
+  <div id="img-modal" class="img-modal hidden">
+  <div>
+    <button class="carousel-btn" id="modalPrevBtn" style="margin-right:1em;">‹</button>
+    <div class="img-modal-col">
+      <span class="img-modal-close" id="img-modal-close" style="position:absolute; left:0; top:0; font-size:2.5em; color:#fff; cursor:pointer; z-index:10; padding:0 16px;">&times;</span>
+      <img class="img-modal-content" id="img-modal-img" />
+      <div id="img-modal-desc" class="img-modal-desc"></div>
+    </div>
+    <button class="carousel-btn" id="modalNextBtn" style="margin-left:1em;">›</button>
+  </div>
+</div>
 
   <!-- JS libraries -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
