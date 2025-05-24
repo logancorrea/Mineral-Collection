@@ -40,10 +40,10 @@ function makeMap() {
   const avgLat = specimens.reduce((s,p)=>s+p.lat,0)/specimens.length;
   const avgLng = specimens.reduce((s,p)=>s+p.lng,0)/specimens.length;
 
-  const map = L.map("map").setView([avgLat, avgLng], 2);
+  const map = L.map('map').setView([avgLat, avgLng], 2);
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "&copy; OpenStreetMap contributors"
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
   const cluster = L.markerClusterGroup({
