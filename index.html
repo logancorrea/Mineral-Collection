@@ -78,6 +78,52 @@
         modalImg.style.transform = 'scale(1)';
       });
     }
+
+    // Content population logic
+    function populateContent(spec) {
+      const content = document.getElementById('main-content');
+      const id = spec["Catalog ID"];
+      const species = spec["Species"];
+      const speciesInfoLinks = spec["Species Info Links"] ? spec["Species Info Links"].split(",") : [];
+      const speciesNames = spec["Species Names"] ? spec["Species Names"].split(",") : [];
+      const localityHtml = spec["Locality"] ? spec["Locality"] : "—";
+
+      content.innerHTML = `
+        <h2>${spec["Specimen Title"] || species || `Catalog ${id}`}</h2>
+        <div class="specimen-flex-row">
+          <div class="specimen-images">
+            <img id="main-specimen-image" class="carousel-main-image" src="${spec["Image URL"]}" alt="${spec["Specimen Title"] || species}" />
+            <div id="gallery-content"></div>
+          </div>
+          <div class="specimen-details" id="specimen-details-card">
+            <div class="section">
+              <p><strong>Catalog ID:</strong> ${id}</p>
+              <p><strong>Mindat ID:</strong> ${spec["MinID"] || "—"}</p>
+              ${
+                speciesInfoLinks.length
+                  ? `<p><strong>Species:</strong> ${
+                      speciesNames.length
+                        ? speciesNames.map((name, i) => {
+                            const url = speciesInfoLinks[i] || speciesInfoLinks[0];
+                            return `<a href="${url}" target="_blank">${name}</a>`;
+                          }).join(", ")
+                        : speciesInfoLinks.map(url => `<a href="${url}" target="_blank">${url}</a>`).join(", ")
+                    }</p>`
+                  : ""
+              }
+              <p><strong>Locality:</strong> ${localityHtml}</p>
+              <p><strong>Year Acquired:</strong> ${spec["Year of Acquisition"] || "—"}</p>
+              <p><strong>Dimensions:</strong> ${spec["Dimensions"] ? spec["Dimensions"] + "mm" : "—"}</p>
+              <p><strong>Max Crystal Size:</strong> ${spec["Max Crystal Size"] ? spec["Max Crystal Size"] + "mm" : "—"}</p>
+              <p><strong>Source:</strong> ${spec["Specimen Source"] || "—"}</p>
+              <p><strong>Notes:</strong> ${spec["Notes"] || "—"}</p>
+              <p><strong>Coordinates:</strong> ${spec["Coordinates"] || "—"}</p>
+            </div>
+          </div>
+        </div>
+        <div id="map"></div>
+      `;
+    }
   </script>
 </body>
 </html>

@@ -224,28 +224,28 @@ async function showSpecimen(id) {
   let currentSlide = 0;
   const visibleCount = 2;
 
+  let mainIndex = 0; // Track the main image index
+
   function renderCarousel(images) {
     const galleryDiv = document.getElementById("gallery-content");
-    if (!galleryDiv) {
-      console.error("❌ No #gallery-content found");
-      return;
-    }
+    if (!galleryDiv) return;
 
-    const end = Math.min(currentSlide + visibleCount, images.length);
     const description = spec["Description"]?.trim() || "";
-    const shown = images.slice(currentSlide, end).map((name, idx) =>
-      `<img src="${name}" alt="${description}" class="specimen-img carousel-img" data-img="${name}" loading="lazy" style="cursor: pointer;" />`
-    ).join("");
-
-    const hasPrev = currentSlide > 0;
-    const hasNext = end < images.length;
 
     galleryDiv.innerHTML = `
-      <div class="carousel-wrapper">
-        <button class="carousel-btn prev" id="prevBtn" ${hasPrev ? "" : "disabled"}>‹</button>
-        <div class="image-row">${shown}</div>
-        <button class="carousel-btn next" id="nextBtn" ${hasNext ? "" : "disabled"}>›</button>
+      <div class="carousel-main-image-wrap">
+        <img src="${images[mainIndex]}" alt="${description}" class="carousel-main-image" id="carousel-main-image" style="cursor:pointer;" />
       </div>
+      ${
+        images.length > 1
+          ? `<div class="carousel-thumbnails" id="carousel-thumbnails">
+              ${images.map((img, idx) => `
+                <img src="${img}" alt="Thumbnail ${idx + 1}" class="carousel-thumb${idx === mainIndex ? ' active' : ''}" data-idx="${idx}" />
+              `).join('')}
+            </div>`
+          : ""
+      }
+      <!-- Modal HTML stays the same -->
       <div id="img-modal" class="img-modal hidden">
         <div style="display:flex; flex-direction:row; align-items:center; justify-content:center;">
           <button class="carousel-btn" id="modalPrevBtn" style="margin-right:1em;">‹</button>
@@ -265,6 +265,28 @@ async function showSpecimen(id) {
         </div>
       </div>
     `;
+
+    // Only add thumbnail click logic if there are thumbnails
+    if (images.length > 1) {
+      document.querySelectorAll('.carousel-thumb').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          mainIndex = parseInt(thumb.dataset.idx, 10);
+          renderCarousel(images);
+        });
+      });
+    }
+
+    // Main image click opens modal
+    const mainImg = document.getElementById('carousel-main-image');
+    mainImg.addEventListener('click', () => {
+      // Open modal with mainIndex
+      modal.classList.remove("hidden");
+      modalImg.src = images[mainIndex];
+      modalImg.alt = description;
+      document.getElementById("img-modal-desc").textContent = description;
+      modalIndex = mainIndex;
+      updateModalButtons();
+    });
 
     // Carousel buttons
     const prevBtn = document.getElementById("prevBtn");
@@ -487,35 +509,36 @@ async function showSpecimen(id) {
 
   content.innerHTML = `
     <h2>${spec["Specimen Title"] || species || `Catalog ${id}`}</h2>
-
-    <div class="gallery">
-      <div id="gallery-content"></div>
+    <div class="specimen-flex-row">
+      <div class="specimen-images">
+        <div id="gallery-content"></div>
+      </div>
+      <div class="specimen-details">
+        <div class="section">
+          <p><strong>Catalog ID:</strong> ${id}</p>
+          <p><strong>Mindat ID:</strong> ${spec["MinID"] || "—"}</p>
+          ${
+            speciesInfoLinks.length
+              ? `<p><strong>Species:</strong> ${
+                  speciesNames.length
+                    ? speciesNames.map((name, i) => {
+                        const url = speciesInfoLinks[i] || speciesInfoLinks[0];
+                        return `<a href="${url}" target="_blank">${name}</a>`;
+                      }).join(", ")
+                    : speciesInfoLinks.map(url => `<a href="${url}" target="_blank">${url}</a>`).join(", ")
+                }</p>`
+              : ""
+          }
+          <p><strong>Locality:</strong> ${localityHtml}</p>
+          <p><strong>Year Acquired:</strong> ${spec["Year of Acquisition"] || "—"}</p>
+          <p><strong>Dimensions:</strong> ${spec["Dimensions"] ? spec["Dimensions"] + "mm" : "—"}</p>
+          <p><strong>Max Crystal Size:</strong> ${spec["Max Crystal Size"] ? spec["Max Crystal Size"] + "mm" : "—"}</p>
+          <p><strong>Source:</strong> ${spec["Specimen Source"] || "—"}</p>
+          <p><strong>Notes:</strong> ${spec["Notes"] || "—"}</p>
+          <p><strong>Coordinates:</strong> ${spec["Coordinates"] || "—"}</p>
+        </div>
+      </div>
     </div>
-
-    <div class="section">
-      <p><strong>Catalog ID:</strong> ${id}</p>
-      <p><strong>Mindat ID:</strong> ${spec["MinID"] || "—"}</p>
-      ${
-        speciesInfoLinks.length
-          ? `<p><strong>Species:</strong> ${
-              speciesNames.length
-                ? speciesNames.map((name, i) => {
-                    const url = speciesInfoLinks[i] || speciesInfoLinks[0];
-                    return `<a href="${url}" target="_blank">${name}</a>`;
-                  }).join(", ")
-                : speciesInfoLinks.map(url => `<a href="${url}" target="_blank">${url}</a>`).join(", ")
-            }</p>`
-          : ""
-      }
-      <p><strong>Locality:</strong> ${localityHtml}</p>
-      <p><strong>Year Acquired:</strong> ${spec["Year of Acquisition"] || "—"}</p>
-      <p><strong>Dimensions:</strong> ${spec["Dimensions"] ? spec["Dimensions"] + "mm" : "—"}</p>
-      <p><strong>Max Crystal Size:</strong> ${spec["Max Crystal Size"] ? spec["Max Crystal Size"] + "mm" : "—"}</p>
-      <p><strong>Source:</strong> ${spec["Specimen Source"] || "—"}</p>
-      <p><strong>Notes:</strong> ${spec["Notes"] || "—"}</p>
-      <p><strong>Coordinates:</strong> ${spec["Coordinates"] || "—"}</p>
-    </div>
-
     <div id="map"></div>
   `;
 
@@ -643,3 +666,28 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
   if (window.location.hash) loadFromHash();
 });
+document.getElementById('thumbsPrevBtn').onclick = () => {
+  document.getElementById('carousel-thumbnails').scrollBy({left: -120, behavior: 'smooth'});
+};
+document.getElementById('thumbsNextBtn').onclick = () => {
+  document.getElementById('carousel-thumbnails').scrollBy({left: 120, behavior: 'smooth'});
+};
+
+function matchDetailsCardToImage() {
+  const img = document.getElementById('main-specimen-image');
+  const card = document.getElementById('specimen-details-card');
+  if (img && card) {
+    // Wait for image to load to get correct height
+    if (!img.complete) {
+      img.onload = () => matchDetailsCardToImage();
+      return;
+    }
+    card.style.height = img.offsetHeight + 'px';
+  }
+}
+
+// Call after rendering specimen content
+matchDetailsCardToImage();
+
+// Optionally, re-run on window resize for responsiveness
+window.addEventListener('resize', matchDetailsCardToImage);

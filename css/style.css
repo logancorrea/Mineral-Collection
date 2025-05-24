@@ -23,6 +23,7 @@
   --modal-caption-padding: 18px 20px 16px 20px;
   --modal-caption-font-size: 1.1rem;
   --modal-caption-radius: 0 0 0 0;
+  --specimen-details-bg: rgba(255,255,255,0.85); /* Add this line */
 }
 
 /* === Reset & Base === */
@@ -480,6 +481,7 @@ body {
   width: 100%;
   height: 80vh;
   min-height: 400px;
+  margin-top: 0em; /* Adjust this value for more or less space */
 }
 
 /* --- Image Modal Navigator --- */
@@ -521,4 +523,136 @@ body {
   pointer-events: none;
   border-radius: 2px;
   background: rgba(255,0,0,0.08);
+}
+
+/* === Carousel === */
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.carousel-btn {
+  position: relative;
+  z-index: 20; /* Higher than image and caption */
+  background: var(--picture-border);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 2.2em;
+  height: 2.2em;
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px #0005;
+}
+
+.carousel-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.carousel-btn:hover:not(:disabled) {
+  background: var(--picture-hover);
+}
+
+.carousel-main-image-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1em;
+}
+.carousel-main-image {
+  max-width: 90vw;
+  max-height: 60vh;
+  border-radius: 0;         /* <-- Remove rounded corners */
+  box-shadow: 0 2px 16px #0003;
+  cursor: pointer;
+  background: #fff;
+  object-fit: contain;
+}
+.carousel-thumbnails-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-bottom: 1em;
+}
+
+.carousel-thumbnails {
+  display: flex;
+  gap: 1em;
+  overflow-x: auto;
+  padding: 0.5em 0;
+  justify-content: center;
+  scrollbar-width: thin;
+  scrollbar-color: var(--picture-border) #eee;
+  max-width: 80vw;
+}
+
+.carousel-thumb {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border 0.2s, box-shadow 0.2s;
+  background: #fff;
+}
+
+.carousel-thumb.active,
+.carousel-thumb:hover {
+  border: 2px solid var(--picture-hover);
+  box-shadow: 0 2px 8px #0002;
+}
+
+/* Remove thumbnail carousel buttons */
+.carousel-thumbnails-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-bottom: 1em;
+}
+
+/* Remove button styles (optional, for cleanup) */
+.carousel-thumb-btn {
+  display: none !important;
+}
+
+.specimen-flex-row {
+  display: flex;
+  gap: 3vw;
+  align-items: flex-start;
+  margin-bottom: 0em;
+  flex-wrap: wrap;
+}
+
+.specimen-images {
+  flex: 1 1 420px;
+  min-width: 320px;
+  max-width: 600px;
+}
+
+.specimen-details {
+  flex: 1 1 320px;
+  min-width: 260px;
+  max-width: 420px;
+  background: var(--specimen-details-bg); /* Use the root variable here */
+  border-radius: 10px;
+  padding: 1.5em 2em;
+}
+
+@media (max-width: 900px) {
+  .specimen-flex-row {
+    flex-direction: column;
+    gap: 2em;
+  }
+  .specimen-details, .specimen-images {
+    max-width: 100%;
+    min-width: 0;
+    padding: 0.5em 0;
+  }
 }
