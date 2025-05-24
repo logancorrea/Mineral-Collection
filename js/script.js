@@ -379,7 +379,8 @@ async function showSpecimen(id) {
       }
       <p><strong>Locality:</strong> ${localityHtml}</p>
       <p><strong>Year Acquired:</strong> ${spec["Year of Acquisition"] || "—"}</p>
-      <p><strong>Dimensions:</strong> ${spec["Dimensions"] || "—"}</p>
+      <p><strong>Dimensions:</strong> ${spec["Dimensions"] ? spec["Dimensions"] + "mm" : "—"}</p>
+      <p><strong>Max Crystal Size:</strong> ${spec["Max Crystal Size"] ? spec["Max Crystal Size"] + "mm" : "—"}</p>
       <p><strong>Source:</strong> ${spec["Specimen Source"] || "—"}</p>
       <p><strong>Notes:</strong> ${spec["Notes"] || "—"}</p>
       <p><strong>Coordinates:</strong> ${spec["Coordinates"] || "—"}</p>
