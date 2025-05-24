@@ -235,7 +235,7 @@ body {
   padding-right: 8vw;
   padding-top: 0;
   padding-bottom: 48px;
-  background: var(--gallery-background);
+  background: transparent !important; /* Make gallery area transparent */
 }
 
 /* Gallery grid: images touch, no gaps, crisp edges */
@@ -247,16 +247,17 @@ body {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
+  background: transparent !important; /* Ensure grid is transparent */
 }
 
 .gallery-card {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  border: 2px solid var(--gallery-background); /* Reduced from 3px to 1px */
+  border: 1px solid var(--gallery-background); /* Reduced from 3px to 1px */
   border-radius: 0;
   box-shadow: none;
-  background: none !important;
+  background: none !important; /* Ensure cards are transparent */
   overflow: hidden;
   width: 100%;
   height: 100%;
@@ -277,6 +278,8 @@ body {
   background: #000;
   user-drag: none;
   user-select: none;
+  object-fit: contain;      /* <-- Change from cover to contain */
+  object-position: center;/* <-- Optional: centers the crop */
 }
 
 /* --- Gallery Card Overlay Text --- */
@@ -491,7 +494,8 @@ button#toggleGallery {
 /* Make main-content, gallery-content, and map backgrounds transparent ONLY on their respective pages */
 .scroll-page #gallery-content,
 .home #gallery-content {
-  background: var(--gallery-background) !important;
+  /* background: var(--gallery-background); */
+  background: transparent !important;
 }
 .map-page #map,
 .home #main-content {
