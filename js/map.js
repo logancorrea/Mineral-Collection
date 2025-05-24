@@ -53,10 +53,47 @@ function makeMap() {
   });
 
   allMarkers = specimens.map(sp => {
+    const imageUrl = `images/${sp.id}.jpg`;
+
+    const popupHtml = `
+      <div style="min-width:220px;max-width:340px;">
+        <img src="${imageUrl}" alt="Specimen ${sp.id}" style="width:100%;max-width:220px;max-height:160px;object-fit:contain;border-radius:8px;border:1px solid #ccc;box-shadow:0 1px 8px #0002;margin-bottom:10px;">
+        <div style="font-weight:600;font-size:1.1em;margin-bottom:4px;">${sp.title || sp.species || "Specimen"} (Cat ID: ${sp.id})</div>
+        <div style="font-size:1em;margin-bottom:2px;">${sp.species || ""}</div>
+        <div style="font-size:0.97em;color:#aaa;">${sp.lat.toFixed(4)}, ${sp.lng.toFixed(4)}</div>
+        <button id="goto-specimen-${sp.id}" style="margin-top:10px;padding:0.5em 1.2em;font-size:1em;border-radius:6px;border:none;background:#008397;color:#fff;cursor:pointer;">View Specimen</button>
+      </div>
+    `;
+
     const marker = L.marker([sp.lat, sp.lng])
-      .bindPopup(`<a href="index.html#${sp.id}">${sp.title || sp.species || "Specimen"} (Cat ID: ${sp.id})</a>`);
+      .bindTooltip(
+        `<div style="display:flex;align-items:center;gap:12px;min-width:220px;">
+          <img src="${imageUrl}" alt="Specimen ${sp.id}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;border:1px solid #ccc;box-shadow:0 1px 4px #0002;">
+          <div>
+            <div style="font-weight:600;">${sp.title || sp.species || "Specimen"} (Cat ID: ${sp.id})</div>
+            <div style="font-size:0.97em;">${sp.species || ""}</div>
+            <div style="font-size:0.97em;">${sp.lat.toFixed(4)}, ${sp.lng.toFixed(4)}</div>
+          </div>
+        </div>`,
+        { direction: 'top', sticky: true, className: 'map-hover-tooltip', opacity: 1 }
+      )
+      .bindPopup(popupHtml, { className: 'map-large-popup', maxWidth: 420 }) // <-- Add this line
+      .on('mouseover', function(e) { this.openTooltip(); })
+      .on('mouseout', function(e) { this.closeTooltip(); })
+      .on('click', function(e) {
+        this.openPopup();
+        setTimeout(() => {
+          const btn = document.getElementById(`goto-specimen-${sp.id}`);
+          if (btn) {
+            btn.onclick = () => {
+              window.location.href = `index.html#${sp.id}`;
+            };
+          }
+        }, 100);
+      });
+
     cluster.addLayer(marker);
-    marker._specimenData = sp; // Attach data for search
+    marker._specimenData = sp;
     return marker;
   });
 

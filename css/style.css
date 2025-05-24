@@ -656,3 +656,91 @@ body {
     padding: 0.5em 0;
   }
 }
+
+/* === Map Info Tooltip === */
+.map-info-hover {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.map-info-tooltip {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: 120%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 0.8em 1.2em;
+  border-radius: 8px;
+  white-space: pre-line;
+  z-index: 100;
+  min-width: 180px;
+  box-shadow: 0 2px 8px #0005;
+  pointer-events: none;
+}
+
+.map-info-hover:hover .map-info-tooltip,
+.map-info-hover:focus-within .map-info-tooltip {
+  display: block;
+}
+
+/* === Leaflet Map Tooltip === */
+.leaflet-tooltip.map-hover-tooltip {
+  background: rgba(0,0,0,0.92);
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px #0005;
+  padding: 0.7em 1em;
+  font-size: 1em;
+  border: none;
+  min-width: 220px;
+  pointer-events: none;
+}
+
+.leaflet-tooltip.map-hover-tooltip img {
+  display: block;
+  margin: 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-shadow: 0 1px 4px #0002;
+}
+
+/* --- Map Page Popups and Tooltips --- */
+.map-large-popup img {
+  width: 100%;
+  max-width: 320px;
+  max-height: 220px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px #0003;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.leaflet-popup-content.map-large-popup {
+  padding: 0 !important;
+}
+
+.leaflet-popup-content {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 1em;
+}
+
+.leaflet-popup-content button {
+  margin-top: 10px;
+  padding: 0.5em 1.2em;
+  font-size: 1em;
+  border-radius: 6px;
+  border: none;
+  background: #008397;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.leaflet-popup-content button:hover {
+  background: #005f6b;
+}
