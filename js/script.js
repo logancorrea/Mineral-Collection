@@ -248,7 +248,7 @@ async function showSpecimen(id) {
       <!-- Modal HTML stays the same -->
       <div id="img-modal" class="img-modal hidden">
         <div style="display:flex; flex-direction:row; align-items:center; justify-content:center;">
-          <button class="carousel-btn" id="modalPrevBtn" style="margin-right:1em;">‹</button>
+          <button class="carousel-btn" id="modalPrevBtn">‹</button>
           <div class="img-modal-col" style="display:flex; flex-direction:column; align-items:center; position:relative;">
             <span class="img-modal-close" id="img-modal-close" style="position:absolute; left:0; top:0; font-size:2.5em; color:#fff; cursor:pointer; z-index:10; padding:0 16px;">&times;</span>
             <img class="img-modal-content" id="img-modal-img" />
@@ -261,7 +261,7 @@ async function showSpecimen(id) {
             </div>
             <div id="img-modal-desc" class="img-modal-desc" style="color:#fff; text-align:center; margin-top:1em; max-width:90vw;"></div>
           </div>
-          <button class="carousel-btn" id="modalNextBtn" style="margin-left:1em;">›</button>
+          <button class="carousel-btn" id="modalNextBtn">›</button>
         </div>
       </div>
     `;
