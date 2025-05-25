@@ -310,38 +310,6 @@ body {
 .gallery-card .caption {
   padding: 10px;
   font-size: 0.95rem;
-
-}
-
-/* === Carousel === */
-.carousel-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 1em;
-}
-
-.carousel-btn {
-  position: relative;
-  z-index: 20; /* Higher than image and caption */
-  background: var(--picture-border);
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 2.2em;
-  height: 2.2em;
-  font-size: 1.5em;
-  cursor: pointer;
-  transition: background 0.2s;
-  box-shadow: 0 2px 8px #0005;
-}
-
-.carousel-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.carousel-btn:hover:not(:disabled) {
-  background: var(--picture-hover);
 }
 
 .image-row {
@@ -604,15 +572,6 @@ body {
 .carousel-thumb:hover {
   border: 2px solid var(--picture-hover);
   box-shadow: 0 2px 8px #0002;
-}
-
-/* Remove thumbnail carousel buttons */
-.carousel-thumbnails-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-  margin-bottom: 1em;
 }
 
 /* Remove button styles (optional, for cleanup) */
