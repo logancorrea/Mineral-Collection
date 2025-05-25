@@ -409,6 +409,12 @@ body {
   user-select: none;
 }
 
+/* For specimen pages: make the map smaller */
+#main-content #map {
+  height: 300px; /* Adjust the value as needed */
+  max-height: 300px;
+}
+
 /* --- General Transparent Backgrounds --- */
 #main-content,
 #gallery-content,
