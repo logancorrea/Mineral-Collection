@@ -310,28 +310,6 @@ body {
 .gallery-card .caption {
   padding: 10px;
   font-size: 0.95rem;
-
-}
-
-.image-row {
-  display: flex;
-  gap: 1em;
-  overflow: hidden;
-}
-
-.specimen-img {
-  border: 3px solid var(--picture-border);
-  border-radius: 8px;
-  max-width: 400px;
-  max-height: 400px;
-  background: #fff;
-  transition: border 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-}
-
-.specimen-img:hover {
-  border-color: var(--picture-hover);
-  box-shadow: 0 2px 12px #0002;
 }
 
 /* --- Modal --- */
