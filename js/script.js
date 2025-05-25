@@ -112,20 +112,13 @@ function renderCollectionStats() {
     ["Species 1", "Species 2", "Species 3", "Species 4", "Species 5"].forEach(key => {
       if (spec[key]) uniqueSpecies.add(spec[key].trim());
     });
-    // Count images (estimate by Photos column or just 1 per specimen)
-    if (spec["Photos"] && !isNaN(spec["Photos"])) {
-      totalImages += parseInt(spec["Photos"]);
-    } else {
-      totalImages += 1;
-    }
   });
 
   content.innerHTML = `
     <h2>Collection Stats</h2>
     <ul style="font-size:1.2em;line-height:1.7;">
       <li><strong>Total Specimens:</strong> ${totalSpecimens}</li>
-      <li><strong>Unique Species:</strong> ${uniqueSpecies.size}</li>
-      <li><strong>Total Images:</strong> ${totalImages}</li>
+      <li><strong>Unique  Minerals:</strong> ${uniqueSpecies.size}</li>
     </ul>
     <p style="color:#888;">Select a specimen from the sidebar to view details.</p>
     <div id="stats-map" style="height:400px;margin-top:2em;border-radius:8px;overflow:hidden;"></div>
