@@ -585,12 +585,6 @@ async function getSpecimenImages(id, maxImages = 5) {
   return urls;
 }
 
-// Example usage:
-// getSpecimenImages(1).then(urls => {
-//   // urls = ["images/1.jpg", "images/1-2.jpg", ...]
-//   // Render these images in your UI
-// });
-
 
 // === Handle hash navigation on page load or hash change ===
 function loadFromHash() {

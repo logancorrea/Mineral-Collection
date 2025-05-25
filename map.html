@@ -25,7 +25,15 @@
   </header>
 
   <div id="map-search-bar">
-    <input type="text" id="mapSearch" placeholder="Search specimens…">
+    <input type="text" id="mapSearch" placeholder="Search specimens…" style="margin-bottom:0.5em;">
+    <!-- Dropdown filter for Species -->
+    <select id="speciesFilter">
+      <option value="">All Species</option>
+    </select>
+    <!-- Dropdown filter for Specimen Sources -->
+    <select id="sourceFilter">
+      <option value="">All Specimen Sources</option>
+    </select>
   </div>
 
   <div id="map" style="width: 100%; height: 80vh;"></div>

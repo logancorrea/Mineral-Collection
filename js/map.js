@@ -13,9 +13,9 @@ Papa.parse(metaCsvUrl, {
     const header = rows[hdrRow].map(c => c.trim());
     rows.slice(hdrRow + 1).forEach(r => {
       const obj = {};
-      header.forEach((col,i)=> obj[col] = r[i]);
+      header.forEach((col, i) => obj[col] = r[i]);
       if (obj["Coordinates"] && obj["Coordinates"].includes(",")) {
-        const [lat,lng] = obj["Coordinates"].split(",").map(s=>parseFloat(s));
+        const [lat, lng] = obj["Coordinates"].split(",").map(s => parseFloat(s));
         if (!isNaN(lat) && !isNaN(lng))
           specimens.push({ 
             lat, lng,
@@ -24,21 +24,55 @@ Papa.parse(metaCsvUrl, {
             species: [
               obj["Species 1"], obj["Species 2"], obj["Species 3"],
               obj["Species 4"], obj["Species 5"]
-            ].filter(Boolean).join(", ")
+            ].filter(Boolean).join(", "),
+            source: obj["Specimen Source"] || ""   // <-- Changed: use "Specimen Source" instead of Locality
           });
       }
     });
+    populateFilters(specimens);  // Populate the dropdowns using specimens data
     makeMap();
   }
 });
 
 let allMarkers = [];
 
+function populateFilters(specimensArray) {
+  const sourceSet = new Set();
+  const speciesSet = new Set();
+
+  specimensArray.forEach(pt => {
+    if (pt.source) sourceSet.add(pt.source);
+    if (pt.species) {
+      pt.species.split(",").map(s => s.trim()).forEach(s => {
+        if (s) speciesSet.add(s);
+      });
+    }
+  });
+  
+  // Update: we now use a dropdown with id "sourceFilter"
+  const sourceSelect = document.getElementById("sourceFilter");
+  const speciesSelect = document.getElementById("speciesFilter");
+  
+  sourceSet.forEach(source => {
+    const option = document.createElement("option");
+    option.value = source;
+    option.textContent = source;
+    sourceSelect.appendChild(option);
+  });
+  
+  speciesSet.forEach(species => {
+    const option = document.createElement("option");
+    option.value = species;
+    option.textContent = species;
+    speciesSelect.appendChild(option);
+  });
+}
+
 function makeMap() {
   if (!specimens.length) { alert("No coords"); return; }
 
-  const avgLat = specimens.reduce((s,p)=>s+p.lat,0)/specimens.length;
-  const avgLng = specimens.reduce((s,p)=>s+p.lng,0)/specimens.length;
+  const avgLat = specimens.reduce((s, p) => s + p.lat, 0) / specimens.length;
+  const avgLng = specimens.reduce((s, p) => s + p.lng, 0) / specimens.length;
 
   const map = L.map('map').setView([avgLat, avgLng], 2);
 
@@ -77,7 +111,7 @@ function makeMap() {
         </div>`,
         { direction: 'top', sticky: true, className: 'map-hover-tooltip', opacity: 1 }
       )
-      .bindPopup(popupHtml, { className: 'map-large-popup', maxWidth: 420 }) // <-- Add this line
+      .bindPopup(popupHtml, { className: 'map-large-popup', maxWidth: 420 })
       .on('mouseover', function(e) { this.openTooltip(); })
       .on('mouseout', function(e) { this.closeTooltip(); })
       .on('click', function(e) {
@@ -99,22 +133,42 @@ function makeMap() {
 
   cluster.addTo(map);
 
-  // --- Unified search logic: id, title, species ---
+  // --- Unified text search logic ---
   const searchInput = document.getElementById("mapSearch");
   if (searchInput) {
-    searchInput.addEventListener("input", function() {
-      const q = this.value.trim().toLowerCase();
-      cluster.clearLayers();
-      allMarkers.forEach(marker => {
-        const sp = marker._specimenData;
-        const id = sp.id ? sp.id.toString() : "";
-        const title = (sp.title || "").toLowerCase();
-        const species = (sp.species || "").toLowerCase();
-        const searchText = `${id} ${title} ${species}`;
-        if (searchText.includes(q)) {
-          cluster.addLayer(marker);
-        }
-      });
+    searchInput.addEventListener("input", filterMarkers);
+  }
+  
+  // --- Updated Dropdown filter event listeners ---
+  // Now using "sourceFilter" instead of "localityFilter"
+  const sourceSelect = document.getElementById("sourceFilter");
+  const speciesSelect = document.getElementById("speciesFilter");
+
+  if (sourceSelect) sourceSelect.addEventListener("change", filterMarkers);
+  if (speciesSelect) speciesSelect.addEventListener("change", filterMarkers);
+
+  // --- Function to filter markers based on text search, specimen source, and species ---
+  function filterMarkers() {
+    const q = (searchInput ? searchInput.value.trim().toLowerCase() : "");
+    const selectedSource = (sourceSelect ? sourceSelect.value : "");
+    const selectedSpecies = (speciesSelect ? speciesSelect.value : "");
+
+    cluster.clearLayers();
+    allMarkers.forEach(marker => {
+      const sp = marker._specimenData;
+      const id = sp.id ? sp.id.toString() : "";
+      const title = (sp.title || "").toLowerCase();
+      const species = (sp.species || "").toLowerCase();
+      const source = (sp.source || "").toLowerCase();
+      const searchText = `${id} ${title} ${species} ${source}`;
+      
+      const textMatches = searchText.includes(q);
+      const sourceMatches = selectedSource ? source === selectedSource.toLowerCase() : true;
+      const speciesMatches = selectedSpecies ? species.includes(selectedSpecies.toLowerCase()) : true;
+      
+      if (textMatches && sourceMatches && speciesMatches) {
+        cluster.addLayer(marker);
+      }
     });
   }
 }
