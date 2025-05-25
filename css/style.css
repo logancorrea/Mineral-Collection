@@ -310,6 +310,7 @@ body {
 .gallery-card .caption {
   padding: 10px;
   font-size: 0.95rem;
+
 }
 
 .image-row {
@@ -484,11 +485,11 @@ body {
 
 .img-modal-navigator-box {
   position: absolute;
-  border: 2px solid red;
+  border: 2px solid #008397;
   box-sizing: border-box;
   pointer-events: none;
   border-radius: 2px;
-  background: rgba(255,0,0,0.08);
+  background: rgba(0, 204, 255, 0.08);
 }
 
 /* === Carousel === */
