@@ -636,6 +636,11 @@ body {
   max-width: 600px;
 }
 
+/* Add left padding so that specimen images don’t touch the sidebar */
+#main-content .specimen-images {
+  padding-left: 4rem;
+}
+
 .specimen-details {
   flex: 1 1 320px;
   min-width: 260px;
@@ -643,6 +648,11 @@ body {
   background: var(--specimen-details-bg); /* Use the root variable here */
   border-radius: 10px;
   padding: 1.5em 2em;
+}
+
+/* Add extra padding between specimen image and text areas */
+.specimen-flex-row > * {
+  padding: 1rem;
 }
 
 @media (max-width: 900px) {
