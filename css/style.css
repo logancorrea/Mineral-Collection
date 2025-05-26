@@ -244,14 +244,13 @@ body {
   padding-right: 8vw;
   padding-top: 0;
   padding-bottom: 48px;
-  background: transparent !important; /* Make gallery area transparent */
 }
 
 /* Gallery grid: images touch, no gaps, crisp edges */
 #gallery-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Only 2 images per row */
-  gap: 2em; /* or your preferred spacing */
+  grid-template-columns: repeat(4, 1fr); /* Only 2 images per row */
+  gap: .5em; /* spacing between images */
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
@@ -262,10 +261,6 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  border: 1px solid var(--gallery-background); /* Reduced from 3px to 1px */
-  border-radius: 0;
-  box-shadow: none;
-  background: none !important; /* Ensure cards are transparent */
   overflow: hidden;
   width: 100%;
   position: relative;
@@ -287,7 +282,6 @@ body {
   left: 0; right: 0; bottom: 0;
   padding: 12px 8px 10px 8px;
   background: rgba(0,0,0,0.55); /* fallback for older browsers */
-  background: color-mix(in srgb, var(--gallery-background) 40%, transparent);
   color: var(--background);
   font-size: 1rem;
   text-align: left;

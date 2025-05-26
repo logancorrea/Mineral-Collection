@@ -44,6 +44,7 @@ Papa.parse(metaCsvUrl, {
 
       const title = spec["Specimen Title"]?.trim();
       const description = spec["Description"]?.trim() || ""; // Get Description
+      const locality = spec["Locality"]?.trim() || ""; // Get Locality
 
       // Label: Title (or species if missing), then Catalog ID
       let labelMain = title ? title : (species ? species : "Specimen");
@@ -63,10 +64,9 @@ Papa.parse(metaCsvUrl, {
         <img src="${imageUrl}" alt="${description || labelMain}" />
         <a href="index.html#${id}">
           <div class="caption">
-            <div style="font-weight:600;">${labelMain}</div>
-            <div style="font-size:0.97em;">Catalog ID: ${id}</div>
-            <div style="font-size:0.97em;">Species: ${species || "—"}</div>
-            <div class="desc" style="font-size:0.96em; margin-top:2px;">${description}</div>
+            <div style="font-weight:600;">${species}</div>
+            <div style="font-size:0.8em;">Catalog ID: ${id}</div>
+            <div style="font-size:0.8em;">${locality || "—"}</div>
           </div>
         </a>
       `;

@@ -685,36 +685,36 @@ function openStaticModal(images, i, spec, description) {
   currentModalIndex = i;
   currentModalSpec = spec;
 
-  // Compose modal header HTML (if you use one)
-  // modalHeader.innerHTML = ...;
-
+  // (Optional: set modal header content here if needed)
   modalImg.src = images[i];
   modalImg.alt = description;
   modalDesc.textContent = spec["Description"] || '';
   modal.classList.remove('hidden');
   btnPrev.disabled = (i === 0);
   btnNext.disabled = (i === images.length - 1);
-
-  // Add keyboard navigation for left/right arrow keys
-  document.onkeydown = function(e) {
-    if (modal.classList.contains('hidden')) return;
-    if (e.key === "ArrowLeft" && !btnPrev.disabled) {
-      btnPrev.click();
-      e.preventDefault();
-    }
-    if (e.key === "ArrowRight" && !btnNext.disabled) {
-      btnNext.click();
-      e.preventDefault();
-    }
-    if (e.key === "Escape") {
-      btnClose.click();
-      e.preventDefault();
-    }
-  };
 }
 
-// Remove keyboard listener when modal closes
+document.addEventListener('keydown', function(e) {
+  // Only run keyboard navigation if the modal is visible
+  if (modal.classList.contains('hidden')) return;
+  
+  if (e.key === "ArrowLeft" && !btnPrev.disabled) {
+    btnPrev.click();
+    e.preventDefault();
+  }
+  
+  if (e.key === "ArrowRight" && !btnNext.disabled) {
+    btnNext.click();
+    e.preventDefault();
+  }
+  
+  if (e.key === "Escape") {
+    btnClose.click();
+    e.preventDefault();
+  }
+});
+
 btnClose.onclick = () => {
   modal.classList.add('hidden');
-  document.onkeydown = null;
+  // No need to reset document.onkeydown because our global listener checks modal visibility
 };
