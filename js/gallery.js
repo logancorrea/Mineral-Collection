@@ -64,7 +64,7 @@ Papa.parse(metaCsvUrl, {
         <img src="${imageUrl}" alt="${description || labelMain}" />
         <a href="index.html#${id}">
           <div class="caption">
-            <div style="font-weight:600;">${species}</div>
+            <div style="font-weight:600;">${labelMain || species}</div>
             <div style="font-size:0.8em;">Catalog ID: ${id}</div>
             <div style="font-size:0.8em;">${locality || "—"}</div>
           </div>
