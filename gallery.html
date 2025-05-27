@@ -18,6 +18,18 @@
     </div>
   </div>
 
+  <div id="gallery-search-bar" style="padding: 1em; display: flex; flex-wrap: wrap; gap: 1em; align-items: center;">
+    <input type="text" id="gallerySearch" placeholder="Search specimens…" style="flex: 1 1 300px;">
+    <!-- Dropdown filter for Species -->
+    <select id="gallerySpeciesFilter">
+      <option value="">All Species</option>
+    </select>
+    <!-- Dropdown filter for Specimen Sources -->
+    <select id="gallerySourceFilter">
+      <option value="">All Specimen Sources</option>
+    </select>
+  </div>
+
   <div id="gallery-content">
     <div id="gallery-grid"></div>
   </div>

@@ -58,8 +58,11 @@ Papa.parse(metaCsvUrl, {
 
       const card = document.createElement("div");
       card.className = "gallery-card";
+      // Save searchable text and also each filter value as data attributes
       card.dataset.search = `${idStr} ${searchTitle} ${speciesStr}`;
       card.dataset.id = id;
+      card.dataset.species = species;     // Added for gallery filtering
+      card.dataset.source = locality;       // If you wish to filter by specimen source, update this to match your CSV field (if it's not "locality")
       card.innerHTML = `
         <img src="${imageUrl}" alt="${description || labelMain}" />
         <a href="index.html#${id}">
@@ -82,5 +85,48 @@ Papa.parse(metaCsvUrl, {
         card.style.display = searchText.includes(q) ? "" : "none";
       });
     });
+
+    // After the specimen data is processed and cards are appended,
+    // populate the dropdown filters for species and specimen source.
+    function populateGalleryFilters(specimenCards) {
+      const sourceSet = new Set();
+      const speciesSet = new Set();
+
+      // Loop over each card's dataset (you could also build these sets during CSV processing)
+      specimenCards.forEach(card => {
+        // Assuming your card inner HTML contains the details, consider putting these values as data attributes.
+        const id = card.dataset.id;
+        // If not already set in dataset, reparse from card.dataset.search if you know the structure.
+        const searchText = card.dataset.search.toLowerCase();
+        // Look for species (for example, if you stored it in the search string) 
+        // or you can store data-species and data-source explicitly when creating a card.
+        // Here we'll assume data attributes exist:
+        const species = card.dataset.species;
+        const source = card.dataset.source;
+
+        if (species) speciesSet.add(species);
+        if (source) sourceSet.add(source);
+      });
+
+      const speciesSelect = document.getElementById("gallerySpeciesFilter");
+      const sourceSelect = document.getElementById("gallerySourceFilter");
+
+      speciesSet.forEach(species => {
+        const option = document.createElement("option");
+        option.value = species;
+        option.textContent = species;
+        speciesSelect.appendChild(option);
+      });
+
+      sourceSet.forEach(source => {
+        const option = document.createElement("option");
+        option.value = source;
+        option.textContent = source;
+        sourceSelect.appendChild(option);
+      });
+    }
+
+    // After appending all gallery cards...
+    populateGalleryFilters(document.querySelectorAll("#gallery-grid .gallery-card"));
   }
 });
